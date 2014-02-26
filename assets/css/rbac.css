@@ -1,0 +1,73 @@
+/* 
+    Document   : rbac
+    Created on : 22 Feb, 2014, 12:31:01 PM
+    Author     : pradeep
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+  display: block;
+}
+
+.assign-role {
+  max-width: 400px !important;
+  padding: 25px 30px 30px 70px;
+  margin: 0 auto 20px;
+  background-color: #F9F9F9;
+  border: 1px solid #e5e5e5;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+.rbac-chechbox li{  display: block;}
+.btn-action {  display: block;}
+.btn-container { margin-left: 30%;}
+.inner-form {float:left; width:100%; overflow: hidden;}
+.main {float: left; width: 100%; padding-top: 10px;}
+.alignR {text-align: right;}
+.btn-S {margin-top:25px; padding-right: 35px;}
+.inner {float: left; width:100%; margin-bottom: 20px; border-bottom: 1px solid #ccc;}
+.inner-1 {width: 50%;}
+.inner-form {float: left; width: 100%;}
+#table table thead tr th{font-weight: bold; text-align: center; vertical-align: top;}
+.out-L {outline: 0 none!important;}
+.inner-form .couponhide {display: none;}
+table thead {background-color: #EDEDED;}
+table thead th tr{ font-size: 16px !important;}
+.index-table { padding: 0 !important; background-color: #F9F9F9;}
+.create-btn {
+  margin: 0 0 10px 1px !important; 
+  background-color: rgb(249, 249, 249) !important; 
+  border-radius: 4px 4px 4px 4px !important; 
+  color: rgb(100, 100, 100)  !important;
+  border: 1px solid rgb(221, 221, 221) !important;
+}
+.submit-btn {
+  margin: 10px 0 10px 1px !important; 
+  background-color: #EDEDED !important; 
+  border-radius: 4px 4px 4px 4px !important; 
+  color: rgb(100, 100, 100)  !important;
+  border: 1px solid rgb(225, 225, 225) !important;
+}
+.custom-textbox {
+    border: 1px solid rgb(193, 193, 193) !important;
+    border-radius: 4px 4px 4px 4px !important;
+    height: 30px !important;
+    width: 270px !important;
+}
+.block-msg {
+  background-color:#F9F9F9; 
+  margin:25px 0px;
+}
+li {
+  display: block !important;
+  font-size: 14px !important;
+}
+.control-label {
+  font-size: 16px !important;
+}
