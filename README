@@ -1,0 +1,97 @@
+RBAC (Role Base Access Control)
+=================================
+
+RBAC (Role base access control) manage  role and permissions. It is used for
+assign permission to role, assign role to user, creating new role, update existing role
+:author:  Developer Team http://www.incaendo.com
+
+
+Installation
+------------
+
+To setup backend connector you have to follow some steps mentioned below:
+
+1. Checkout source code from repository and put into /protected/modules
+   (git@git.ahref.eu:lib/rbacconnector.git)
+
+
+CONFIGURATION
+-------------
+
+Configuration changes is to be done in config.php and console.php
+ 1. Change in config/config.php - import files of RBAC module
+    ex.  array ('import' => array(
+                              'application.modules.rbac.models.*',
+                              'application.modules.rbac.components.*',
+                              'application.modules.rbac.*',
+                              'application.modules.rbac.controllers.*',
+                             )
+2. Add in config file 
+            'modules'=>array(
+              'UserAdmin'
+            )
+
+Usage
+-----
+
+  1. Links for menu
+     a. Listing of role assigned to user    BASE_URL . '/rbac/user/index'
+     b. Assign new role to user             BASE_URL . '/rbac/user/assign'    
+     c. Change role of user                 BASE_URL . 'rbac/user/assign?id=USER_ID'    
+     d. Create new role                     BASE_URL . 'rbac/role/add'    
+     e. Role listing                        BASE_URL . rbac/role/index'  
+     f. Assign permission to role           BASE_URL . '/rbac/permission/index'  
+     g. Listing of permission assigned to role     BASE_URL . '/rbac/permission/assign?id=ROLE_ID'  
+
+2.  Get role assigned to user
+     
+      User::getRoles(userEmail);
+
+3.  Get permission assigned to user
+    
+      User::getPermission(userEmail); 
+   
+      if getting all permission role wise -
+    
+      User::getPermission(userEmail, true);
+
+4.  PERMISSION  Define array of permission in config file.
+      ex- define('PERMISSION', '["Edit story", "Can create story"]');
+
+ 
+Database Migration
+------------------
+
+Prerequisite:
+
+1. You have setup the rbac modules.
+2. You have create a database for application.
+3. You have created config files. /protected/config/config.php and
+   protected/config/console.php and pointed the right DB in it.
+
+In order to migrate DB or perform DB updates run command::
+
+    ./protected/yiic migrate up --migrationPath=application.modules.rbac.migrations
+
+
+
+REQUIREMENTS
+------------
+
+RBAC is developed on yii framework So all requirements of yii
+framework must be fulfilled:
+
+The minimum requirement by Yii is that your Web server supports PHP 5.1.0 or
+above.
+
+Please access the following URL to check if your Web server reaches the
+requirements by Yii, assuming "YiiPath" is where Yii is installed.
+
+
+Dependency List
+---------------
+
+PHP packages need to be installed are
+        1. php5-cli
+        2. php5-curl
+        3. php5-mysql
