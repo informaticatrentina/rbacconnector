@@ -46,7 +46,7 @@ class UserController extends Controller {
               $model->save();
             }
           }
-          $this->redirect('/rbac/user/index');
+          $this->redirect('/rbacconnector/user/index');
         }
       }
     }

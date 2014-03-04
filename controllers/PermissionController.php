@@ -36,7 +36,7 @@ class PermissionController extends Controller {
             $model->save();
           }
         }
-        $this->redirect('/rbac/permission/index');
+        $this->redirect('/rbacconnector/permission/index');
       }
     }
     //get all permissions
@@ -49,7 +49,7 @@ class PermissionController extends Controller {
       }
     }
     if (!array_key_exists('id', $_GET) || empty($_GET['id']) || !is_numeric($_GET['id'])) {
-      $this->redirect('/rbac/permission/index');
+      $this->redirect('/rbacconnector/permission/index');
     }
     //get exusting permissions
     $selPermission = array();

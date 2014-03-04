@@ -1,6 +1,6 @@
 <div class="container">
   <div class="main">
-    <?php echo CHtml::link('Assign Role', array('/rbac/user/assign'), array('class' => 'btn pull-left out-L create-btn')); ?>
+    <?php echo CHtml::link('Assign Role', array('/rbacconnector/user/assign'), array('class' => 'btn pull-left out-L create-btn')); ?>
   </div>
   <?php if (empty($users)) { ?>
   <div class="block-msg">
@@ -64,7 +64,7 @@
               if ($roleAssigned) {
                 $actionText = 'Change Role';
               } ?>
-              <td><?php echo CHtml::link($actionText, array('/rbac/user/assign?id=' . $user['user_id'])); ?></td>
+              <td><?php echo CHtml::link($actionText, array('/rbacconnector/user/assign?id=' . $user['user_id'])); ?></td>
             </tr>
            <?php }?>
           </tbody>

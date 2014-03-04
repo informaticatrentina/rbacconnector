@@ -1,6 +1,6 @@
 <div class="container">
   <div class="main">
-    <?php echo CHtml::link('Add Role', array('/rbac/role/add'), array('class' => 'btn pull-left out-L create-btn')); ?>
+    <?php echo CHtml::link('Add Role', array('/rbacconnector/role/add'), array('class' => 'btn pull-left out-L create-btn')); ?>
   </div>
   <?php if (empty($roles)) { ?>
     <div class="block-msg">
@@ -52,8 +52,8 @@
                 <td><?php echo $i++; ?></td>
                 <td><?php echo $role['role']; ?></td>
                 <td><?php echo $roleStatus; ?></td>
-                <td><?php echo CHtml::link('Edit', array('/rbac/role/edit?id=' . $role['id'])); ?> |
-                    <?php echo CHtml::link('Delete', array('/rbac/role/delete?id=' . $role['id']), array('class' => 'delete-product', 'confirm' => 'Are you sure You want to Delete')); ?>
+                <td><?php echo CHtml::link('Edit', array('/rbacconnector/role/edit?id=' . $role['id'])); ?> |
+                    <?php echo CHtml::link('Delete', array('/rbacconnector/role/delete?id=' . $role['id']), array('class' => 'delete-product', 'confirm' => 'Are you sure You want to Delete')); ?>
                 </td>
               </tr>
               <?php } ?>

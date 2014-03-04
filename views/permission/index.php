@@ -1,7 +1,7 @@
 <div class="container">  
   <?php if (empty($roles)) { ?>
     <div class="main">
-      <?php echo CHtml::link('Add Role', array('/rbac/role/add'), array('class' => 'btn pull-left out-L create-btn')); ?>
+      <?php echo CHtml::link('Add Role', array('/rbacconnector/role/add'), array('class' => 'btn pull-left out-L create-btn')); ?>
     </div>
     <div class="block-msg">
       <div class="row" style="margin-top:50px;">
@@ -66,7 +66,7 @@
                   $actionText = 'Change Pemission';
                 }
                 ?>
-                <td><?php echo CHtml::link($actionText, array('/rbac/permission/assign?id=' . $role['id'])); ?></td>
+                <td><?php echo CHtml::link($actionText, array('/rbacconnector/permission/assign?id=' . $role['id'])); ?></td>
               </tr>
             <?php } ?>
           </tbody>

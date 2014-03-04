@@ -30,10 +30,10 @@ class RoleController extends Controller {
       $model->attributes = $_POST['Role'];
       if ($model->validate()) {        
         if ($this->isExistRole($model->role)) {
-          $this->redirect(array('/rbac/role/index'));
+          $this->redirect(array('/rbacconnector/role/index'));
         }
         if ($model->save()) {
-          $this->redirect(array('/rbac/role/index'));
+          $this->redirect(array('/rbacconnector/role/index'));
         }
       }
     }
@@ -58,7 +58,7 @@ class RoleController extends Controller {
       $model->attributes = $_POST['Role'];
       if ($model->validate()) { 
         if (is_numeric($model->update())) {
-          $this->redirect(array('/rbac/role/index'));
+          $this->redirect(array('/rbacconnector/role/index'));
         }
       }
     } else {
@@ -106,7 +106,7 @@ class RoleController extends Controller {
         $permission->delete();
       }
     }    
-    $this->redirect(array('/rbac/role/index'));
+    $this->redirect(array('/rbacconnector/role/index'));
   }
   
   /**

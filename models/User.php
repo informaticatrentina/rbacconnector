@@ -215,7 +215,7 @@ class User extends CFormModel {
    * @param string $permission 
    * @return boolean true if user have permission else false
    */
-  public static function checkPermission($email, $permission) {
+  public static function checkPermission($email, $permission) { 
     $havePermission = false;
     if (empty($email)) {
       return $havePermission; 
