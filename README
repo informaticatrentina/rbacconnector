@@ -28,7 +28,7 @@ Configuration changes is to be done in config.php and console.php
                              )
 2. Add in config file 
             'modules'=>array(
-              'UserAdmin'
+              'rbac'
             )
 
 Usage
