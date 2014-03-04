@@ -6,44 +6,54 @@ assign permission to role, assign role to user, creating new role, update existi
 :author:  Developer Team http://www.incaendo.com
 
 
-Installation
+INSTALLATION
 ------------
 
 To setup backend connector you have to follow some steps mentioned below:
 
-1. Checkout source code from repository and put into /protected/modules
+1. Checkout source code from repository and put into /protected/modules directory
+   of your project.
    (git@git.ahref.eu:lib/rbacconnector.git)
 
 
 CONFIGURATION
 -------------
 
-Configuration changes is to be done in config.php and console.php
- 1. Change in config/config.php - import files of RBAC module
+Configuration changes is to be done in config.php and console.php file of project.
+
+ 1. Change in config/config.php of project - import files of RBAC module
     ex.  array ('import' => array(
-                              'application.modules.rbac.models.*',
-                              'application.modules.rbac.components.*',
-                              'application.modules.rbac.*',
-                              'application.modules.rbac.controllers.*',
+                              'application.modules.rbacconnector.models.*',
+                              'application.modules.rbacconnector.components.*',
+                              'application.modules.rbacconnector.*',
+                              'application.modules.rbacconnector.controllers.*',
                              )
-2. Add in config file 
+2. Add in config file of project
             'modules'=>array(
-              'rbac'
+              'rbacconnector'
             )
 
-Usage
+3. PERMISSION  Define array of permission in local config file (/protected/config/local_config.php)
+  of project.
+      ex- define('PERMISSION', '["Edit story", "Can create story"]');
+
+
+USAGE
 -----
 
-  1. Links for menu
-     a. Listing of role assigned to user    BASE_URL . '/rbac/user/index'
-     b. Assign new role to user             BASE_URL . '/rbac/user/assign'    
-     c. Change role of user                 BASE_URL . 'rbac/user/assign?id=USER_ID'    
-     d. Create new role                     BASE_URL . 'rbac/role/add'    
-     e. Role listing                        BASE_URL . rbac/role/index'  
-     f. Assign permission to role           BASE_URL . '/rbac/permission/index'  
-     g. Listing of permission assigned to role     BASE_URL . '/rbac/permission/assign?id=ROLE_ID'  
+Following lines describe how to use rbacconnector module in project for 
+different aspects.
 
-2.  Get role assigned to user
+  1. Links for menu-bar of project
+     a. Listing of role assigned to user    BASE_URL . '/rbacconnector/user/index'
+     b. Assign new role to user             BASE_URL . '/rbacconnector/user/assign'    
+     c. Change role of user                 BASE_URL . 'rbacconnector/user/assign?id=USER_ID'    
+     d. Create new role                     BASE_URL . 'rbacconnector/role/add'    
+     e. Role listing                        BASE_URL . rbacconnector/role/index'  
+     f. Assign permission to role           BASE_URL . '/rbacconnector/permission/index'  
+     g. Listing of permission assigned to role     BASE_URL . '/rbacconnector/permission/assign?id=ROLE_ID'  
+
+2.  Get roles assigned to user
      
       User::getRoles(userEmail);
 
@@ -55,23 +65,24 @@ Usage
     
       User::getPermission(userEmail, true);
 
-4.  PERMISSION  Define array of permission in config file.
-      ex- define('PERMISSION', '["Edit story", "Can create story"]');
+4.  Check permission for authorization
+    
+    User::checkPermission(userEmail, permission);    
 
- 
-Database Migration
+
+DATABASE MIGRATION
 ------------------
 
 Prerequisite:
 
-1. You have setup the rbac modules.
-2. You have create a database for application.
-3. You have created config files. /protected/config/config.php and
-   protected/config/console.php and pointed the right DB in it.
+1. You have setup the rbacconnector modules in your project.
+2. You have create a database for your project.
+3. You have created config files in project (/protected/config/config.php and
+   protected/config/console.php) and pointed the right DB in it.
 
 In order to migrate DB or perform DB updates run command::
 
-    ./protected/yiic migrate up --migrationPath=application.modules.rbac.migrations
+    ./protected/yiic migrate up --migrationPath=application.modules.rbacconnector.migrations
 
 
 
@@ -88,7 +99,7 @@ Please access the following URL to check if your Web server reaches the
 requirements by Yii, assuming "YiiPath" is where Yii is installed.
 
 
-Dependency List
+DEPENDENCY LIST
 ---------------
 
 PHP packages need to be installed are
