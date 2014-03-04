@@ -17,6 +17,13 @@ class PermissionController extends Controller {
    * function id used for change, assign permission to a role
    */
   public function actionAssign() {
+    $haveAdminPrivilege = false;
+    if (isset(Yii::app()->session['user'])) {
+      $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
+    } 
+    if (!$haveAdminPrivilege) {
+      $this->redirect(Yii::app()->homeUrl);
+    }
     $model = new Permission();
     if (isset($_POST['Permission'])) {
       $post = $_POST['Permission'];
@@ -63,7 +70,14 @@ class PermissionController extends Controller {
    * actionIndex
    * function id used for showing permission for each role
    */
-  public function actionIndex() {
+  public function actionIndex() {  
+    $haveAdminPrivilege = false;
+    if (isset(Yii::app()->session['user'])) {
+      $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
+    } 
+    if (!$haveAdminPrivilege) { 
+      $this->redirect(Yii::app()->homeUrl);
+    }
     $model = new Permission();    
     //get all permission
     $allPermission = array();
@@ -80,10 +94,14 @@ class PermissionController extends Controller {
     foreach ($permissions as $perm) {
       $permission[$perm['role_id']]['role_id'] = $perm['role_id'];
       $permission[$perm['role_id']]['role'] = $perm['role'];
-      $permission[$perm['role_id']]['permission'][] = $allPermission[$perm['permission']];
+      if (array_key_exists($perm['permission'], $allPermission)) {
+        $permission[$perm['role_id']]['permission'][] = $allPermission[$perm['permission']];
+      } else {
+        $permission[$perm['role_id']]['permission'] = array();
+      }      
       $permission[$perm['role_id']]['status'] = $perm['status'];
     }
-
+    
     $role = new Role();
     $roles = $role->get();
     $this->render('index', array('permissions' => $permission, 'roles' => $roles));

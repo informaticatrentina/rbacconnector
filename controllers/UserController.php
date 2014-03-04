@@ -18,6 +18,13 @@ class UserController extends Controller {
    * function id used fior change, assign permission to a role
    */
   public function actionAssign() {
+    $haveAdminPrivilege = false;
+    if (isset(Yii::app()->session['user'])) {
+      $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
+    } 
+    if (!$haveAdminPrivilege) {
+      $this->redirect(Yii::app()->homeUrl);
+    }
     $model = new User();    
     if (isset($_POST['User'])) {
       $post = $_POST['User'];
@@ -73,6 +80,13 @@ class UserController extends Controller {
    * function id used for showing permission for each role
    */
   public function actionIndex() {
+    $haveAdminPrivilege = false;
+    if (isset(Yii::app()->session['user'])) {
+      $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
+    } 
+    if (!$haveAdminPrivilege) {
+      $this->redirect(Yii::app()->homeUrl);
+    }
     $model = new User();
     $users = $model->get();
     $user = array();

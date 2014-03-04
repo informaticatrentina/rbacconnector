@@ -207,4 +207,24 @@ class User extends CFormModel {
     }
     return $permission;
   }
+  
+  /**
+   * checkPermission
+   * function is used for check permission 
+   * @param string $email
+   * @param string $permission 
+   * @return boolean true if user have permission else false
+   */
+  public static function checkPermission($email, $permission) {
+    $havePermission = false;
+    if (empty($email)) {
+      return $havePermission; 
+    }
+    $allowedPermission = self::getPermission($email);
+    $permission = strtolower(preg_replace("/[^a-z0-9]+/i", "_", $permission));
+    if (is_array($allowedPermission) && in_array($permission, $allowedPermission)) {
+      $havePermission = true;
+    }
+    return $havePermission;
+  }
 }
