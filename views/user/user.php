@@ -1,5 +1,6 @@
 <div class="container">
   <?php
+  $this->renderPartial('/template/navbar');
   $form = $this->beginWidget('CActiveForm', array(
       'enableClientValidation' => true,
       'clientOptions' => array(

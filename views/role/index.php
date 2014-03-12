@@ -1,7 +1,5 @@
 <div class="container">
-  <div class="main">
-    <?php echo CHtml::link('Add Role', array('/rbacconnector/role/add'), array('class' => 'btn pull-left out-L create-btn')); ?>
-  </div>
+  <?php $this->renderPartial('/template/navbar'); ?>
   <?php if (empty($roles)) { ?>
     <div class="block-msg">
       <div class="row" style="margin-top:50px;">
