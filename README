@@ -37,7 +37,9 @@ Configuration changes is to be done in config.php and console.php file of projec
   of project.
       ex- define('PERMISSION', '["Edit story", "Can create story"]');
 
-
+4. RBAC_ADMIN_USER The admin user email for rbac module. This user has all privilege. 
+   This user can create new user, role and assign role to user etc.
+      
 USAGE
 -----
 
@@ -82,7 +84,7 @@ Prerequisite:
 
 In order to migrate DB or perform DB updates run command::
 
-    ./protected/yiic migrate up --migrationPath=application.modules.rbacconnector.migrations
+      ./protected/yiic migrate up --migrationPath=application.modules.rbacconnector.migrations
 
 
 
