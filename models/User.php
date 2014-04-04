@@ -212,7 +212,7 @@ class User extends CFormModel {
    * checkPermission
    * function is used for check permission 
    * @param string $email
-   * @param string $permission 
+   * @param array or string $permission 
    * @return boolean true if user have permission else false
    */
   public static function checkPermission($email, $permission) { 
@@ -221,9 +221,15 @@ class User extends CFormModel {
       return $havePermission; 
     }
     $allowedPermission = self::getPermission($email);
-    $permission = strtolower(preg_replace("/[^a-z0-9]+/i", "_", $permission));
-    if (is_array($allowedPermission) && in_array($permission, $allowedPermission)) {
-      $havePermission = true;
+    if (!is_array($permission)) {
+        $permission = array($permission);
+    }
+    foreach($permission as $singlePermission) {
+        $singlePermission = strtolower(preg_replace("/[^a-z0-9]+/i", "_", $singlePermission));
+        if (is_array($allowedPermission) && in_array($singlePermission, $allowedPermission)) {
+            $havePermission = true;
+            break;
+        }
     }
     return $havePermission;
   }
