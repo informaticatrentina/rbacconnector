@@ -29,9 +29,6 @@ class RoleController extends Controller {
     if (isset($_POST['Role'])) {
       $model->attributes = $_POST['Role'];
       if ($model->validate()) {        
-        if ($this->isExistRole($model->role)) {
-          $this->redirect(array('/rbacconnector/role/index'));
-        }
         if ($model->save()) {
           $this->redirect(array('/rbacconnector/role/index'));
         }
@@ -108,23 +105,5 @@ class RoleController extends Controller {
     }    
     $this->redirect(array('/rbacconnector/role/index'));
   }
-  
-  /**
-   * isExistRole
-   * check whether role is exist or not
-   * @param string $roleName
-   * @return boolean 
-   */
-  public function isExistRole($roleName) { 
-    $existRole = false;
-    if (!empty($roleName)) {
-      $role = new Role();
-      $role->role = $roleName;
-      $roles = $role->get();
-      if (!empty($roles)) {
-        $existRole = true;
-      }
-    }
-    return $existRole;
-  }
+    
 }

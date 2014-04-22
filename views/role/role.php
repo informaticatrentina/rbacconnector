@@ -18,7 +18,7 @@
     <div class="controls">
       <?php echo $form->textField($model, 'role', array('placeholder' => 'Role name', 'class' => 'custom-textbox')); ?>
       <span class="help-inline">
-        <?php echo $form->error($model, 'role'); ?>
+        <?php echo $form->error($model, 'role', array('class' => 'alert-danger col-md-11')); ?>
       </span>
     </div>
   </div>

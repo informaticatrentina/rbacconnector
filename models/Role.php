@@ -19,6 +19,7 @@ class Role extends CFormModel {
   public function rules() {
     return array(
       array('role, status', 'required'),
+      array('role', 'isExistRole'),
     );
   }
 
@@ -119,5 +120,27 @@ class Role extends CFormModel {
       Yii::log('RBAC', 'error', $e->getMessage());
     }
     return $deleteRole;
+  }
+  
+  /**
+   * isExistRole
+   * check whether role is exist or not
+   * @param string $roleName
+   * @return boolean 
+   */
+  public function isExistRole($attribute) {
+    $existRole = false;
+    $roleName = $this->role;
+    if (!empty($roleName)) {
+      $role = new Role();
+      $role->role = trim($roleName);
+      $roles = $role->get();
+      if (!empty($roles)) {
+        $labels = $this->attributeLabels();
+        $this->addError($attribute, "$labels[$attribute] already in used");
+      } else {
+        return true;
+      }
+    }
   }
 }
