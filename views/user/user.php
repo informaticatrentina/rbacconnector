@@ -11,14 +11,15 @@
       )
   ));
   ?>
-
+<div id="assign-role-error" class="alert-danger col-md-11" style="display: none"></div>
+<input type="hidden" name="check-user" id="check-user" />
   <div class="control-group">
     <?php echo $form->labelEx($model, 'user_email', array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->textField($model, 'user_email', array('placeholder' => 'user email', 'class' => 'custom-textbox')); ?>
       <span class="help-inline">
         <span class="help-inline">
-          <?php echo $form->error($model, 'user_email'); ?>
+          <?php echo $form->error($model, 'user_email', array('class' => 'alert-danger col-md-11')); ?>
         </span>
     </div>
   </div>
@@ -51,7 +52,7 @@
         echo $form->hiddenField($model, 'role_id');
       }
       ?>
-      <?php echo CHtml::submitButton('Assign', array('class' => 'btn submit-btn large')); ?>
+      <?php echo CHtml::submitButton('Assign', array('id' => 'assign-roles', 'class' => 'btn submit-btn large')); ?>
     </div>
   </div>
   <?php $this->endWidget(); ?>

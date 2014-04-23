@@ -233,4 +233,37 @@ class User extends CFormModel {
     }
     return $havePermission;
   }
+  
+  /**
+   * updateUser
+   * This function is used to update User details.
+   * @return int
+   */
+  public function updateUser() {
+    try {
+      $set = array();
+      $data = array();
+      if (!empty($this->user_id)) {
+        $where[] = 'id = :id';
+        $data[':id'] = $this->user_id;
+      }
+      if (isset($this->user_status)) {
+        $set[] = 'status = :status';
+        $data[':status'] = $this->user_status;
+      }
+      if (empty($where)) {
+        throw('Where condition cannot be empty.');
+      }
+      $connection = Yii::app()->db;      
+      $sql = "UPDATE rbac_user SET ". implode(', ',  $set) ." WHERE ". implode(' AND ', $where);
+      $query = $connection->createCommand($sql);
+      foreach ($data as $key => &$val) {
+        $query->bindParam($key, $val);
+      }
+      $query->execute();
+    } catch (Exception $e) {
+        Yii::log('Error caused in updateUser method', 'error', $e->getMessage());
+    }
+  }
+    
 }

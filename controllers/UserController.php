@@ -35,16 +35,26 @@ class UserController extends Controller {
         if (empty($userDetail)) {
           $model->user_status = 1;
           $model->user_id = $model->saveUser();
+        } else if ($userDetail['status'] == 0) {
+          $model->user_status = 1;
+          $model->user_id = $userDetail['id'];
+          $model->updateUser();
         } else {
           $model->user_id = $userDetail['id'];
         }
         $model->delete();
         if (array_key_exists('role_id', $post) && !empty($post['role_id'])) {
+          $isRoleAssigned = false;
           foreach ($post['role_id'] as $role) {
             if (!empty($role)) {
+              $isRoleAssigned = true;
               $model->role_id = $role;
               $model->save();
             }
+          }
+          if ($isRoleAssigned === false) {
+            $model->user_status = 0;
+            $model->updateUser();
           }
           $this->redirect('/rbacconnector/user/index');
         }
@@ -71,6 +81,10 @@ class UserController extends Controller {
     //get all roles
     $role = new Role();
     $roles = $role->get();
+    //including the js files required for this view.
+    Yii::app()->clientScript->registerScriptFile(
+      Yii::app()->getAssetManager()->publish(
+        Yii::getPathOfAlias('rbacconnector.assets.js') . '/user.js'));
     $this->render('user', array('model' => $model, 'user' => $user,
         'roles' => $roles, 'selRoleIds' => $selRoleIds));
   }
