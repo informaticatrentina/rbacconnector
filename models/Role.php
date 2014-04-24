@@ -133,17 +133,19 @@ class Role extends CFormModel {
    * @return boolean 
    */
   public function isExistRole($attribute) {
-    $existRole = false;
-    $roleName = $this->role;
-    if (!empty($roleName)) {
-      $role = new Role();
-      $role->role = trim($roleName);
-      $roles = $role->get();
-      if (!empty($roles)) {
-        $labels = $this->attributeLabels();
-        $this->addError($attribute, "$labels[$attribute] already in used");
-      } else {
-        return true;
+    if (empty($this->id)) {
+      $existRole = false;
+      $roleName = $this->role;
+      if (!empty($roleName)) {
+        $role = new Role();
+        $role->role = trim($roleName);
+        $roles = $role->get();
+        if (!empty($roles)) {
+          $labels = $this->attributeLabels();
+          $this->addError($attribute, "$labels[$attribute] already in used");
+        } else {
+          return true;
+        }
       }
     }
   }

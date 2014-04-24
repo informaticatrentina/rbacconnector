@@ -75,7 +75,7 @@ class User extends CFormModel {
       $data[':user_id'] = $this->user_id;
     }
     if (!empty($this->user_email)) {
-      $where[] = 'ur.user_email = :user_email';
+      $where[] = 'u.email = :user_email';
       $data[':user_email'] = $this->user_email;
     }
     if (isset($this->role_status)) {

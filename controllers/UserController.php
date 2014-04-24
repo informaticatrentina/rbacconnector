@@ -30,7 +30,7 @@ class UserController extends Controller {
       $post = $_POST['User'];
       $model->attributes = $post;
       if ($model->validate()) {
-        $model->user_email = $post['user_email'];
+        $model->user_email = trim($post['user_email']);
         $userDetail = $model->getUserByEmail();
         if (empty($userDetail)) {
           $model->user_status = ACTIVE;

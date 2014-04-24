@@ -27,7 +27,7 @@ class RoleController extends Controller {
     }
     $model = new Role();
     if (isset($_POST['Role'])) {
-      $model->attributes = $_POST['Role'];
+      $model->attributes = array_map('trim', $_POST['Role']);
       if ($model->validate()) {        
         if ($model->save()) {
           $this->redirect(array('/rbacconnector/role/index'));
@@ -52,7 +52,7 @@ class RoleController extends Controller {
     $model = new Role();
     $model->id = $_GET['id'];
     if (isset($_POST['Role'])) {
-      $model->attributes = $_POST['Role'];
+      $model->attributes = array_map('trim', $_POST['Role']);
       if ($model->validate()) { 
         if (is_numeric($model->update())) {
           $this->redirect(array('/rbacconnector/role/index'));
