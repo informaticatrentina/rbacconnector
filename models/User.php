@@ -17,6 +17,7 @@ class User extends CFormModel {
   public $role_id;
   public $user_email;
   public $user_status;
+  public $role_status;
 
   public function rules() {
     return array(
@@ -76,6 +77,10 @@ class User extends CFormModel {
     if (!empty($this->user_email)) {
       $where[] = 'ur.user_email = :user_email';
       $data[':user_email'] = $this->user_email;
+    }
+    if (isset($this->role_status)) {
+      $where[] = 'rl.status = :role_status';
+      $data[':role_status'] = $this->role_status;
     }
     $sql = "SELECT * FROM rbac_user u INNER JOIN rbac_user_role ur ON u.id  = ur.user_id 
       INNER JOIN rbac_role rl ON ur.role_id = rl.id WHERE " . implode(' AND ', $where);
@@ -181,6 +186,7 @@ class User extends CFormModel {
   */
  public static function getPermission($email, $roleWisePermission = false) {
     $permission = array();
+    $status = ACTIVE;
     $connection = Yii::app()->db;
     if (empty($email)) {
       return $permission;
@@ -198,9 +204,12 @@ class User extends CFormModel {
       return $permission;
     }
     $sql = "SELECT * FROM rbac_user u INNER JOIN rbac_user_role ur ON u.id  = ur.user_id 
-      INNER JOIN rbac_permission p  ON ur.role_id = p.role_id WHERE email = :email ";
+      INNER JOIN rbac_permission p  ON ur.role_id = p.role_id 
+      INNER JOIN rbac_role rl  ON p.role_id = rl.id WHERE email = :email 
+      AND rl.status = :status";
     $query = $connection->createCommand($sql);
     $query->bindParam(":email", $email);
+    $query->bindParam(":status", $status);
     $permissions = $query->queryAll();
     foreach ($permissions as $perm) {
       $permission[] = $perm['permission'];

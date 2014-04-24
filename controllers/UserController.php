@@ -33,10 +33,10 @@ class UserController extends Controller {
         $model->user_email = $post['user_email'];
         $userDetail = $model->getUserByEmail();
         if (empty($userDetail)) {
-          $model->user_status = 1;
+          $model->user_status = ACTIVE;
           $model->user_id = $model->saveUser();
-        } else if ($userDetail['status'] == 0) {
-          $model->user_status = 1;
+        } else if ($userDetail['status'] == INACTIVE) {
+          $model->user_status = ACTIVE;
           $model->user_id = $userDetail['id'];
           $model->updateUser();
         } else {
@@ -53,7 +53,7 @@ class UserController extends Controller {
             }
           }
           if ($isRoleAssigned === false) {
-            $model->user_status = 0;
+            $model->user_status = INACTIVE;
             $model->updateUser();
           }
           $this->redirect('/rbacconnector/user/index');
@@ -80,6 +80,7 @@ class UserController extends Controller {
     }
     //get all roles
     $role = new Role();
+    $role->status = ACTIVE;
     $roles = $role->get();
     //including the js files required for this view.
     Yii::app()->clientScript->registerScriptFile(
@@ -102,6 +103,7 @@ class UserController extends Controller {
       $this->redirect(Yii::app()->homeUrl);
     }
     $model = new User();
+    $model->role_status = ACTIVE;
     $users = $model->get();
     $user = array();
     foreach ($users as $usr) {

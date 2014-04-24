@@ -67,6 +67,10 @@ class Role extends CFormModel {
       $where[] = 'role = :role';
       $data[':role'] = $this->role;
     }
+    if (isset($this->status)) {
+      $where[] = 'status = :status';
+      $data[':status'] = $this->status;
+    }
     $sql = "SELECT * FROM rbac_role WHERE " . implode(' AND ', $where);
     $query = $connection->createCommand($sql);
     foreach ($data as $key => &$val) {

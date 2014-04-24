@@ -103,6 +103,7 @@ class PermissionController extends Controller {
     }
     
     $role = new Role();
+    $role->status = ACTIVE;
     $roles = $role->get();
     $this->render('index', array('permissions' => $permission, 'roles' => $roles));
   }

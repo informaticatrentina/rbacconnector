@@ -42,8 +42,8 @@
             $i = 1;
             foreach ($roles as $key => $role) {
               $roleStatus = 'Active';
-              if ($role['status'] == 0) {
-                $roleStatus = 'Incatve';
+              if ($role['status'] == INACTIVE) {
+                $roleStatus = 'Inactive';
               }
               ?>
               <tr>
