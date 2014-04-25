@@ -40,7 +40,6 @@
             </tr>
           </thead>
           <tbody>
-          <tbody>
             <?php
             $i = 1;
             foreach ($roles as $role) {

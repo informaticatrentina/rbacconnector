@@ -36,7 +36,6 @@
           </tr>
         </thead>
         <tbody>
-        <tbody>
           <?php 
           $i = 1;        
           foreach ($users as $user) {
