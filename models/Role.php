@@ -93,10 +93,9 @@ class Role extends CFormModel {
         return $updateRole;
       }     
       $connection = Yii::app()->db;
-      $sql = "UPDATE rbac_role SET role = :role, status = :status WHERE id = :id";
+      $sql = "UPDATE rbac_role SET status = :status WHERE id = :id";
       $query = $connection->createCommand($sql);
       $query->bindParam(":id", $this->id);
-      $query->bindParam(":role", $this->role);
       $query->bindParam(":status", $this->status);
       $updateRole = $query->execute();
     } catch (Exception $e) {

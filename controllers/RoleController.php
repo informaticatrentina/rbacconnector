@@ -19,6 +19,7 @@ class RoleController extends Controller {
    */
   public function actionAdd() {
     $haveAdminPrivilege = false;
+    $checkRoleStatus = 'CREATE';
     if (isset(Yii::app()->session['user'])) {
       $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
     } 
@@ -34,7 +35,13 @@ class RoleController extends Controller {
         }
       }
     }
-    $this->render('role', array('model' => $model));
+    //including the js files required for this view.
+    Yii::app()->clientScript->registerScriptFile(
+      Yii::app()->getAssetManager()->publish(
+        Yii::getPathOfAlias('rbacconnector.assets.js') . '/role.js'
+      ), CClientScript::POS_END
+    );
+    $this->render('role', array('model' => $model, 'checkRoleStatus' => $checkRoleStatus));
   }
   
   /**
@@ -43,6 +50,7 @@ class RoleController extends Controller {
    */
   public function actionEdit(){
     $haveAdminPrivilege = false;
+    $checkRoleStatus = 'CREATE';
     if (isset(Yii::app()->session['user'])) {
       $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
     } 
@@ -59,9 +67,19 @@ class RoleController extends Controller {
         }
       }
     } else {
-      $model->attributes = $model->get();
+      $roleDetails = $model->get();
+      if ($roleDetails != '') {
+        $checkRoleStatus = 'EDIT';
+        $model->attributes = $roleDetails;
+      }
     }    
-    $this->render('role', array('model' => $model));
+    //including the js files required for this view.
+    Yii::app()->clientScript->registerScriptFile(
+      Yii::app()->getAssetManager()->publish(
+        Yii::getPathOfAlias('rbacconnector.assets.js') . '/role.js'
+      ), CClientScript::POS_END
+    );
+    $this->render('role', array('model' => $model, 'checkRoleStatus' => $checkRoleStatus));
   }
   
   /**

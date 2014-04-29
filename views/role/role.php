@@ -2,7 +2,6 @@
   <?php
   $this->renderPartial('/template/navbar'); 
   $form = $this->beginWidget('CActiveForm', array(
-      'enableClientValidation' => true,
       'clientOptions' => array(
           'validateOnSubmit' => true,
       ),
@@ -12,11 +11,19 @@
   ));
 
   $status = array('Inactive', 'Active');
+  $roleAttribute = array(     
+      'placeholder' => 'Role name',
+      'class' => 'custom-textbox'
+    );
+  if ($checkRoleStatus == 'EDIT') {
+    $roleAttribute['readonly'] = 'readonly';
+  }
   ?>
+  <div id="assign-role-error" class="alert-danger col-md-11" style="display: none"></div>
   <div class="control-group">
     <?php echo $form->labelEx($model, 'role', array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model, 'role', array('placeholder' => 'Role name', 'class' => 'custom-textbox')); ?>
+      <?php echo $form->textField($model, 'role', $roleAttribute); ?>
       <span class="help-inline">
         <?php echo $form->error($model, 'role', array('class' => 'alert-danger col-md-11')); ?>
       </span>
@@ -40,8 +47,11 @@
         $buttonText = 'Update';
       }
       ?>
-      <?php echo CHtml::submitButton($buttonText, array('class' => 'btn submit-btn large')); ?>
+      <?php echo CHtml::submitButton($buttonText, array('class' => 'btn submit-btn large submitRole')); ?>
     </div>
  </div>
  <?php $this->endWidget(); ?>
 </div>
+<script>
+  var checkRoleStatus = "<?php echo $checkRoleStatus; ?>";
+</script>

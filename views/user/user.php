@@ -1,22 +1,28 @@
 <div class="container">
-  <?php
+  <?php  
   $this->renderPartial('/template/navbar');
   $form = $this->beginWidget('CActiveForm', array(
-      'enableClientValidation' => true,
       'clientOptions' => array(
           'validateOnSubmit' => true,
       ),
       'htmlOptions' => array(
           'class' => 'assign-role',
       )
-  ));
-  ?>
+  )); 
+  $userEmailAttribute = array(     
+      'placeholder' => 'user email',
+      'class' => 'custom-textbox'
+    );
+  if ($model->check_user_status == 'EDIT') {
+    $userEmailAttribute['readonly'] = 'readonly';
+  }
+  ?>  
 <div id="assign-role-error" class="alert-danger col-md-11" style="display: none"></div>
-<input type="hidden" name="check-user" id="check-user" />
   <div class="control-group">
     <?php echo $form->labelEx($model, 'user_email', array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model, 'user_email', array('placeholder' => 'user email', 'class' => 'custom-textbox')); ?>
+      <?php echo $form->textField($model, 'user_email', $userEmailAttribute); ?>
+      <?php echo $form->hiddenField($model, 'check_user_status') ?>
       <span class="help-inline">
         <span class="help-inline">
           <?php echo $form->error($model, 'user_email', array('class' => 'alert-danger col-md-11')); ?>
@@ -57,3 +63,6 @@
   </div>
   <?php $this->endWidget(); ?>
 </div>
+<script>
+  var checkUserStatus = "<?php echo $model->check_user_status; ?>";  
+</script>

@@ -1,18 +1,16 @@
 $(document).ready(function () {  
-  var checkUserStatus = 'CREATE';
-  if ($('#User_user_email').val() !== '') {
-    checkUserStatus = 'EDIT'
-  }
   $('#assign-roles').click(function(e) {
     e.preventDefault();
-    submitUserForm(checkUserStatus);
+    submitUserForm();
   });
 });
 
-function submitUserForm(checkUserStatus) {
-  var checked = false;
-  if ($('#User_user_email').val() == '') {
-    $('#assign-role-error').html('Please provide email id');
+function submitUserForm() {
+  var checked = false;  
+  var emailRegex = new RegExp('^([0-9a-zA-Z]+[-._+&amp;])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$');
+  var isEmailValid = emailRegex.test($.trim($('#User_user_email').val()));
+  if ($('#User_user_email').val() == '' || isEmailValid == false) {
+    $('#assign-role-error').html('Please provide correct email id');
     $('#assign-role-error').show();
     return false;
   }

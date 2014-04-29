@@ -18,6 +18,7 @@ class User extends CFormModel {
   public $user_email;
   public $user_status;
   public $role_status;
+  public $check_user_status;
 
   public function rules() {
     return array(
@@ -261,7 +262,7 @@ class User extends CFormModel {
         $data[':status'] = $this->user_status;
       }
       if (empty($where)) {
-        throw('Where condition cannot be empty.');
+        throw new Exception('Where condition cannot be empty.');
       }
       $connection = Yii::app()->db;      
       $sql = "UPDATE rbac_user SET ". implode(', ',  $set) ." WHERE ". implode(' AND ', $where);

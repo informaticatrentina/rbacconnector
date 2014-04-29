@@ -15,7 +15,7 @@
   <div class="control-group">
     <?php echo $form->labelEx($model, 'role', array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model, 'role',   array('placeholder' => 'Role name', 'class' => 'custom-textbox')); ?>
+      <?php echo $form->textField($model, 'role',   array('placeholder' => 'Role name', 'class' => 'custom-textbox', 'readonly' => 'readonly')); ?>
       <span class="help-inline">
         <span class="help-inline">
           <?php echo $form->error($model, 'role'); ?>

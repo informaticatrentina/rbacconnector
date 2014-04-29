@@ -29,13 +29,13 @@ class UserController extends Controller {
     if (isset($_POST['User'])) {
       $post = $_POST['User'];
       $model->attributes = $post;
+      $model->user_email = trim($post['user_email']);
       if ($model->validate()) {
-        $model->user_email = trim($post['user_email']);
         $userDetail = $model->getUserByEmail();
-        if (empty($userDetail)) {
+        if (empty($userDetail) || $model->check_user_status == 'CREATE') {
           $model->user_status = ACTIVE;
           $model->user_id = $model->saveUser();
-        } else if ($userDetail['status'] == INACTIVE) {
+        } else if ($userDetail['status'] == INACTIVE || $model->check_user_status == 'EDIT') {
           $model->user_status = ACTIVE;
           $model->user_id = $userDetail['id'];
           $model->updateUser();
@@ -64,10 +64,14 @@ class UserController extends Controller {
     $user = array();
     $roles = array();
     $selRoleIds = array();
+    $model->check_user_status = 'CREATE';
     if (array_key_exists('id', $_GET) && !empty($_GET['id'])) {   
       //get user   
       $model->id = $_GET['id'];
       $userDetail = $model->get();
+      if (!empty($userDetail)) {
+        $model->check_user_status = 'EDIT';
+      }
       foreach ($userDetail as $usr) {
         $user['user_id'] = $usr['user_id'];
         $user['email'] = $usr['email'];
@@ -85,7 +89,9 @@ class UserController extends Controller {
     //including the js files required for this view.
     Yii::app()->clientScript->registerScriptFile(
       Yii::app()->getAssetManager()->publish(
-        Yii::getPathOfAlias('rbacconnector.assets.js') . '/user.js'));
+        Yii::getPathOfAlias('rbacconnector.assets.js') . '/user.js'
+      ), CClientScript::POS_END
+    );
     $this->render('user', array('model' => $model, 'user' => $user,
         'roles' => $roles, 'selRoleIds' => $selRoleIds));
   }
