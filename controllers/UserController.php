@@ -18,6 +18,11 @@ class UserController extends Controller {
    * function id used fior change, assign permission to a role
    */
   public function actionAssign() {
+    $message = '';
+    $selectedRole = array();
+    $user = array();
+    $roles = array();
+    $selRoleIds = array();
     $haveAdminPrivilege = false;
     if (isset(Yii::app()->session['user'])) {
       $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
@@ -26,66 +31,74 @@ class UserController extends Controller {
       $this->redirect(Yii::app()->homeUrl);
     }
     $model = new User();    
-    if (isset($_POST['User'])) {
-      $post = $_POST['User'];
-      $model->attributes = $post;
-      $model->user_email = trim($post['user_email']);
-      if ($model->validate()) {
-        $userDetail = $model->getUserByEmail();
-        if (empty($userDetail) || $model->check_user_status == 'CREATE') {
-          $model->user_status = ACTIVE;
-          $model->user_id = $model->saveUser();
-        } else if ($userDetail['status'] == INACTIVE || $model->check_user_status == 'EDIT') {
-          $model->user_status = ACTIVE;
-          $model->user_id = $userDetail['id'];
-          $model->updateUser();
-        } else {
-          $model->user_id = $userDetail['id'];
-        }
-        $model->delete();
-        if (array_key_exists('role_id', $post) && !empty($post['role_id'])) {
-          $isRoleAssigned = false;
-          foreach ($post['role_id'] as $role) {
-            if (!empty($role)) {
-              $isRoleAssigned = true;
-              $model->role_id = $role;
-              $model->save();
+    try {
+      //get all roles
+      $role = new Role();
+      $role->status = ACTIVE;
+      $roles = $role->get();
+      if (isset($_POST['User'])) {
+        $post = $_POST['User'];
+        $model->attributes = $post;
+        $model->check_user_status = $post['check_user_status'];
+        $model->user_email = trim($post['user_email']);
+        if ($model->validate()) {
+          $userDetail = $model->getUserByEmail();
+          if (empty($userDetail) && $model->check_user_status == 'CREATE') {
+            $model->user_status = ACTIVE;
+            $model->user_id = $model->saveUser();
+          } else if (!empty($userDetail) && $model->check_user_status == 'CREATE') {
+            if ($userDetail['status'] == ACTIVE) {
+              throw new Exception('User already exists.');
             }
-          }
-          if ($isRoleAssigned === false) {
-            $model->user_status = INACTIVE;
+            $model->user_status = ACTIVE;
+            $model->user_id = $userDetail['id'];
             $model->updateUser();
+          } else if ($model->check_user_status == 'EDIT') {
+            $model->user_status = ACTIVE;
+            $model->user_id = $userDetail['id'];
+            $model->updateUser();
+          } else {
+            $model->user_id = $userDetail['id'];
           }
-          $this->redirect('/rbacconnector/user/index');
+          $model->delete();
+          if (array_key_exists('role_id', $post) && !empty($post['role_id'])) {
+            $isRoleAssigned = false;
+            foreach ($post['role_id'] as $role) {
+              if (!empty($role)) {
+                $isRoleAssigned = true;
+                $model->role_id = $role;
+                $model->save();
+              }
+            }
+            if ($isRoleAssigned === false) {
+              $model->user_status = INACTIVE;
+              $model->updateUser();
+            }
+            $this->redirect('/rbacconnector/user/index');
+          }
+        }
+      }      
+      $model->check_user_status = 'CREATE';
+      if (array_key_exists('id', $_GET) && !empty($_GET['id'])) {   
+        //get user   
+        $model->id = $_GET['id'];
+        $userDetail = $model->get();
+        if (!empty($userDetail)) {
+          $model->check_user_status = 'EDIT';
+        }
+        foreach ($userDetail as $usr) {
+          $user['user_id'] = $usr['user_id'];
+          $user['email'] = $usr['email'];
+          $user['role'][] = array(
+            'role_id' => $usr['role_id'], 'role' => $usr['role']
+          );
+          $model->user_email = $usr['email'];
+          $selRoleIds[] = $usr['role_id']; 
         }
       }
-    }
-    $selectedRole = array();
-    $user = array();
-    $roles = array();
-    $selRoleIds = array();
-    $model->check_user_status = 'CREATE';
-    if (array_key_exists('id', $_GET) && !empty($_GET['id'])) {   
-      //get user   
-      $model->id = $_GET['id'];
-      $userDetail = $model->get();
-      if (!empty($userDetail)) {
-        $model->check_user_status = 'EDIT';
-      }
-      foreach ($userDetail as $usr) {
-        $user['user_id'] = $usr['user_id'];
-        $user['email'] = $usr['email'];
-        $user['role'][] = array(
-            'role_id' => $usr['role_id'], 'role' => $usr['role']
-        );
-        $model->user_email = $usr['email'];
-        $selRoleIds[] = $usr['role_id']; 
-      }
-    }
-    //get all roles
-    $role = new Role();
-    $role->status = ACTIVE;
-    $roles = $role->get();
+    } catch (Exception $e) {
+      $message = $e->getMessage();
+    }    
     //including the js files required for this view.
     Yii::app()->clientScript->registerScriptFile(
       Yii::app()->getAssetManager()->publish(
@@ -93,7 +106,7 @@ class UserController extends Controller {
       ), CClientScript::POS_END
     );
     $this->render('user', array('model' => $model, 'user' => $user,
-        'roles' => $roles, 'selRoleIds' => $selRoleIds));
+      'roles' => $roles, 'selRoleIds' => $selRoleIds, 'message' => $message));
   }
 
   /**

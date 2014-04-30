@@ -15,9 +15,13 @@
     );
   if ($model->check_user_status == 'EDIT') {
     $userEmailAttribute['readonly'] = 'readonly';
+  } 
+  $errorAttribute = "style='display: none' ";
+  if ($message != '') {
+    $errorAttribute = "";
   }
   ?>  
-<div id="assign-role-error" class="alert-danger col-md-11" style="display: none"></div>
+<div id="assign-role-error" class="alert-danger col-md-11" <?php echo $errorAttribute; ?> > <?php echo $message; ?> </div>
   <div class="control-group">
     <?php echo $form->labelEx($model, 'user_email', array('class' => 'control-label')); ?>
     <div class="controls">
@@ -64,5 +68,5 @@
   <?php $this->endWidget(); ?>
 </div>
 <script>
-  var checkUserStatus = "<?php echo $model->check_user_status; ?>";  
+  var checkUserStatus = "<?php echo $model->check_user_status; ?>";    
 </script>
