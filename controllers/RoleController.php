@@ -11,8 +11,20 @@
  *  <ahref Foundation.
  */
 
-class RoleController extends Controller {
+class RoleController extends PageController {
   
+  /**
+   * beforeAction
+   * This function is called before any action method and set header bar
+   * @param $action
+   * @return boolean
+   */
+  public function beforeAction($action) {
+    if (defined('ENABLE_NAVBAR_MODULE') && ENABLE_NAVBAR_MODULE == 1) {
+      $this->setHeader('3.0');
+    }
+    return true;
+  }
   /**
    * Add
    * function id used for create role

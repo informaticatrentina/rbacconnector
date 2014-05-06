@@ -26,6 +26,7 @@ class RbacconnectorModule extends CWebModule {
     $basePath = Yii::getPathOfAlias('application.modules.rbacconnector.assets');
     $baseUrl = Yii::app()->getAssetManager()->publish($basePath);
     $cs = Yii::app()->getClientScript();
+    $cs->registerCssFile($baseUrl . '/css/bootstrap.css');
     $cs->registerCssFile($baseUrl . '/css/rbac.css');
   }
 

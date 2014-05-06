@@ -10,8 +10,20 @@
  * This file can not be copied and/or distributed without the express permission of
  *  <ahref Foundation.
  */
-class PermissionController extends Controller {
-
+class PermissionController extends PageController {
+  
+  /**
+   * beforeAction
+   * This function is called before any action method set header bar
+   * @param $action
+   * @return boolean
+   */
+  public function beforeAction($action) {
+    if (defined('ENABLE_NAVBAR_MODULE') && ENABLE_NAVBAR_MODULE == 1) {
+      $this->setHeader('3.0');
+    }
+    return true;
+  }
   /**
    * actionAssign
    * function id used for change, assign permission to a role

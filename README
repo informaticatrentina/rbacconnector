@@ -39,6 +39,9 @@ Configuration changes is to be done in config.php and console.php file of projec
 
 4. RBAC_ADMIN_USER The admin user email for rbac module. This user has all privilege. 
    This user can create new user, role and assign role to user etc.
+
+5. ENABLE_NAVBAR_MODULE The navbar module status. Its value is 1 if navbar module will be used in 
+   rbacconnector module otherwise 0. 
       
 USAGE
 -----

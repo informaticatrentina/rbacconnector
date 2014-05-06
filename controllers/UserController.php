@@ -11,8 +11,20 @@
  *  <ahref Foundation.
  */
 
-class UserController extends Controller {
+class UserController extends PageController {
 
+  /**
+   * beforeAction
+   * This function is called before any action method set header bar
+   * @param $action
+   * @return boolean
+   */
+  public function beforeAction($action) {
+    if (defined('ENABLE_NAVBAR_MODULE') && ENABLE_NAVBAR_MODULE == 1) {
+      $this->setHeader('3.0');
+    }
+    return true;
+  }
   /**
    * actionAssign
    * function id used fior change, assign permission to a role

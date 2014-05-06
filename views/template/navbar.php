@@ -1,4 +1,4 @@
-<div role="navigation" class="navbar navbar-default">
+<div role="navigation" class="navbar navbar-default rbac-navbar">
   <ul class="nav nav-pills">
     <li class="dropdown">
       <a href="/rbacconnector/user/index" class="dropdown-toggle" data-toggle="dropdown">

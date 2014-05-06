@@ -66,8 +66,15 @@ table thead th tr{ font-size: 16px !important;}
 }
 li {
   display: block !important;
-  font-size: 14px !important;
 }
 .control-label {
   font-size: 16px !important;
+}
+
+.rbac-navbar {
+  margin-bottom: 20px !important;
+}
+
+.navbar-collapse {
+  padding-right: 0 !important;
 }
