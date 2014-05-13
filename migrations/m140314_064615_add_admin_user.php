@@ -12,7 +12,7 @@ class m140314_064615_add_admin_user extends CDbMigration {
     $this->execute("INSERT INTO `rbac_permission` (`role_id`, `permission`)
                     VALUES ('1', 'is_admin')");
     
-    $this->execute("INSERT INTO `timu`.`rbac_user_role` (`user_id`, `role_id`)
+    $this->execute("INSERT INTO `rbac_user_role` (`user_id`, `role_id`)
                     VALUES ('1', '1')");
     
   }
