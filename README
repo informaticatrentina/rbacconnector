@@ -21,28 +21,19 @@ CONFIGURATION
 
 Configuration changes is to be done in config.php and console.php file of project.
 
- 1. Change in config/config.php of project - import files of RBAC module
-    ex.  array ('import' => array(
-                              'application.modules.rbacconnector.models.*',
-                              'application.modules.rbacconnector.components.*',
-                              'application.modules.rbacconnector.*',
-                              'application.modules.rbacconnector.controllers.*',
-                             )
-2. Add in config file of project
-            'modules'=>array(
-              'rbacconnector'
-            )
-
-3. PERMISSION  Define array of permission in local config file (/protected/config/local_config.php)
+- PERMISSION  Define array of permission in local config file (/protected/config/local_config.php)
   of project.
       ex- define('PERMISSION', '["Edit story", "Can create story"]');
 
-4. RBAC_ADMIN_USER The admin user email for rbac module. This user has all privilege. 
+- RBAC_ADMIN_USER The admin user email for rbac module. This user has all privilege. 
    This user can create new user, role and assign role to user etc.
 
-5. ENABLE_NAVBAR_MODULE The navbar module status. Its value is 1 if navbar module will be used in 
+- ENABLE_NAVBAR_MODULE The navbar module status. Its value is 1 if navbar module will be used in 
    rbacconnector module otherwise 0. 
-      
+
+- ENABLE_MODULES_LIST The constant for enable rbacconnector module in your project.
+      for ex.  ["rbacconnector", "..", ..]
+
 USAGE
 -----
 
@@ -72,7 +63,7 @@ different aspects.
 
 4.  Check permission for authorization
     
-    User::checkPermission(userEmail, permission);    
+    User::checkPermission(userEmail, permission);
 
 
 DATABASE MIGRATION

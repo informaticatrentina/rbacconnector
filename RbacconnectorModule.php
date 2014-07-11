@@ -10,6 +10,8 @@ class RbacconnectorModule extends CWebModule {
         'rbacconnector.models.*',
         'rbacconnector.components.*',
         'rbacconnector.assets.*',
+        'rbacconnector.*',
+        'rbacconnector.controllers.*'
     ));
   }
 
