@@ -1,15 +1,15 @@
-<div class="container">  
+<div class="container">
   <?php $this->renderPartial('/template/navbar'); ?>
   <?php if (empty($roles)) { ?>
     <div class="main">
-      <?php echo CHtml::link('Add Role', array('/rbacconnector/role/add'), array('class' => 'btn pull-left out-L create-btn')); ?>
+      <?php echo CHtml::link(Yii::t('rbac', 'Add role'), array('/rbacconnector/role/add'), array('class' => 'btn pull-left out-L create-btn')); ?>
     </div>
     <div class="block-msg">
       <div class="row" style="margin-top:50px;">
         <div class="span10">
-          <div style="padding:25px 25px;">    
+          <div style="padding:25px 25px;">
             <center>
-              Role is not added for assign permission. Click on <b>add role</b> button for create role. 
+              <?php echo Yii::t('rbac', 'No role has been defined yet. Click on <strong>add role</strong> button to create a role.'); ?>
             </center>
           </div>
         </div>
@@ -33,10 +33,10 @@
         <table class="container table table-bordered table-hover index-table">
           <thead>
             <tr>
-              <th>S.No.</th>
-              <th>Role</th>          
-              <th>Permission</th>
-              <th>Action</th>         
+              <th><?php echo Yii::t('rbac', 'S.No.'); ?></th>
+              <th><?php echo Yii::t('rbac', 'Role'); ?></th>
+              <th><?php echo Yii::t('rbac', 'Permission'); ?></th>
+              <th><?php echo Yii::t('rbac', 'Action'); ?></th>
             </tr>
           </thead>
           <tbody>
@@ -59,11 +59,11 @@
                     }
                     ?>
                   </ul>
-                </td>            
+                </td>
                 <?php
-                $actionText = 'Assign Permission';
+                $actionText = Yii::t('rbac', 'Assign Permission');
                 if ($permissionExist) {
-                  $actionText = 'Change Pemission';
+                  $actionText = Yii::t('rbac', 'Change Pemission');
                 }
                 ?>
                 <td><?php echo CHtml::link($actionText, array('/rbacconnector/permission/assign?id=' . $role['id'])); ?></td>

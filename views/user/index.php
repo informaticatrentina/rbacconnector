@@ -4,15 +4,15 @@
   <div class="block-msg">
     <div class="row" style="margin-top:50px;">
       <div class="span10">
-        <div style="padding:25px 25px;">    
+        <div style="padding:25px 25px;">
           <center>
-            Role is not assigned to user. Click on <b>assign role</b> button for assign role. 
+            <?php echo Yii::t('rbac', 'No role has been defined yet. Click on <strong>add role</strong> button to create a role.'); ?>
           </center>
         </div>
       </div>
     </div>
   </div>
-  <?php } else {    
+  <?php } else {
     $form = $this->beginWidget('CActiveForm', array(
         'enableClientValidation' => true,
         'clientOptions' => array(
@@ -23,21 +23,21 @@
         )
      ));
   ?>
-  <div class="inner-form">     
+  <div class="inner-form">
     <div id = "error-message" style="float:right; margin-right: 100px;"></div>
     <div class="inner-form" id="table">
       <table class="container table table-bordered table-hover index-table table-responsive">
         <thead>
           <tr>
-            <th>S.No.</th>
-            <th>User email</th>          
-            <th>Role</th>
-            <th>Action</th>         
+            <th><?php echo Yii::t('rbac', 'S.No.'); ?></th>
+            <th><?php echo Yii::t('rbac', 'User email'); ?></th>
+            <th><?php echo Yii::t('rbac', 'Role'); ?></th>
+            <th><?php echo Yii::t('rbac', 'Action'); ?></th>
           </tr>
         </thead>
         <tbody>
-          <?php 
-          $i = 1;        
+          <?php
+          $i = 1;
           foreach ($users as $user) {
             $roleAssigned = false;
             ?>
@@ -46,20 +46,20 @@
               <td><?php echo $user['email']; ?></td>
               <td>
                 <ul>
-                <?php               
+                <?php
                   foreach ($user['role'] as $rol) {
-                    ?><li><?php   
+                    ?><li><?php
                     echo $rol['role'];
-                    ?></li><?php    
+                    ?></li><?php
                     $roleAssigned = true;
-                  }                   
+                  }
                 ?>
                 <ul>
-              </td>            
-              <?php 
-              $actionText = 'Assign Role';
+              </td>
+              <?php
+              $actionText = Yii::t('rbac', 'Assign Role');
               if ($roleAssigned) {
-                $actionText = 'Change Role';
+                $actionText = Yii::t('rbac', 'Change Role');
               } ?>
               <td><?php echo CHtml::link($actionText, array('/rbacconnector/user/assign?id=' . $user['user_id'])); ?></td>
             </tr>
