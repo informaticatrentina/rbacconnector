@@ -55,8 +55,7 @@ class PermissionController extends PageController {
     $permissions = array();
     if (defined('PERMISSION')) {
       $permission = json_decode(PERMISSION);
-      foreach ($permission as $perm) {
-        $key = strtolower(preg_replace("/[^a-z0-9]+/i", "_", $perm));
+      foreach ($permission as $key => $perm) {
         $permissions[$key] = $perm;
       }
     }
@@ -95,8 +94,7 @@ class PermissionController extends PageController {
     $allPermission = array();
     if (defined('PERMISSION')) {
       $definedPermission = json_decode(PERMISSION);
-      foreach ($definedPermission as $perm) {
-        $key = strtolower(preg_replace("/[^a-z0-9]+/i", "_", $perm));
+      foreach ($definedPermission as $key => $perm) {
         $allPermission[$key] = $perm;
       }
     }
