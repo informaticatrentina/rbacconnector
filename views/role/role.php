@@ -1,6 +1,6 @@
 <div class="container">
   <?php
-  $this->renderPartial('/template/navbar'); 
+  $this->renderPartial('/template/navbar');
   $form = $this->beginWidget('CActiveForm', array(
       'clientOptions' => array(
           'validateOnSubmit' => true,
@@ -10,9 +10,9 @@
       )
   ));
 
-  $status = array('Inactive', 'Active');
-  $roleAttribute = array(     
-      'placeholder' => 'Role name',
+  $status = array(Yii::t('rbac', 'Inactive'), Yii::t('rbac', 'Active'));
+  $roleAttribute = array(
+      'placeholder' => Yii::t('rbac', 'Role name'),
       'class' => 'custom-textbox'
     );
   if ($checkRoleStatus == 'EDIT') {
@@ -21,7 +21,7 @@
   ?>
   <div id="assign-role-error" class="alert-danger col-md-11" style="display: none"></div>
   <div class="control-group">
-    <?php echo $form->labelEx($model, 'role', array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model, Yii::t('rbac', 'role'), array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->textField($model, 'role', $roleAttribute); ?>
       <span class="help-inline">
@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="control-group">
-    <?php echo $form->labelEx($model, 'status', array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model, Yii::t('rbac', 'status'), array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->dropDownList($model, 'status', $status, array('class' => 'custom-textbox')); ?>
       <span class="help-inline">
@@ -41,10 +41,10 @@
   <div class="control-group">
     <div class="controls btn-container">
       <?php
-      $buttonText = 'Save';
+      $buttonText = Yii::t('rbac', 'Save');
       if (isset($model->id) && $model->id) {
         echo $form->hiddenField($model, 'id');
-        $buttonText = 'Update';
+        $buttonText = Yii::t('rbac', 'Update');
       }
       ?>
       <?php echo CHtml::submitButton($buttonText, array('class' => 'btn submit-btn large submitRole')); ?>

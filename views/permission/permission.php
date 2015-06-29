@@ -1,6 +1,6 @@
 <div class="container">
   <?php
-  $this->renderPartial('/template/navbar'); 
+  $this->renderPartial('/template/navbar');
   $form = $this->beginWidget('CActiveForm', array(
       'enableClientValidation' => true,
       'clientOptions' => array(
@@ -13,9 +13,9 @@
   ?>
 
   <div class="control-group">
-    <?php echo $form->labelEx($model, 'role', array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model, Yii::t('rbac', 'role'), array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model, 'role',   array('placeholder' => 'Role name', 'class' => 'custom-textbox', 'readonly' => 'readonly')); ?>
+      <?php echo $form->textField($model, 'role',   array('placeholder' => Yii::t('rbac', 'Role name'), 'class' => 'custom-textbox', 'readonly' => 'readonly')); ?>
       <span class="help-inline">
         <span class="help-inline">
           <?php echo $form->error($model, 'role'); ?>
@@ -23,8 +23,8 @@
     </div>
   </div>
   <div class="control-group">
-    <?php echo $form->labelEx($model, 'Select Permission', array('class' => 'control-label')); ?>
-    <div class="controls">   
+    <?php echo $form->labelEx($model, Yii::t('rbac', 'Select Permission'), array('class' => 'control-label')); ?>
+    <div class="controls">
        <ul class="rbac-chechbox">
       <?php
       foreach ($permissions as $key => $permission) {
@@ -36,9 +36,9 @@
             $checkBoxValue['checked'] = 'checked';
           }
         }
-        ?><li> 
+        ?><li>
           <?php echo $form->checkBox($model, 'permission[]', $checkBoxValue); ?> &nbsp;
-          <?php echo $permission; 
+          <?php echo $permission;
       } ?> </li> <?php
       ?>
          </ul>
@@ -53,9 +53,9 @@
       if (isset($model->role_id) && $model->role_id) {
         echo $form->hiddenField($model, 'role_id');
       }
-      $buttonText = 'Assign';
+      $buttonText = Yii::t('rbac', 'Assign');
       if (!empty($selectedPermission)) {
-        $buttonText = 'Update';
+        $buttonText = Yii::t('rbac', 'Update');
       }
       ?>
       <?php echo CHtml::submitButton($buttonText, array('class' => 'btn submit-btn large')); ?>

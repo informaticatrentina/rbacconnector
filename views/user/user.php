@@ -1,5 +1,5 @@
 <div class="container">
-  <?php  
+  <?php
   $this->renderPartial('/template/navbar');
   $form = $this->beginWidget('CActiveForm', array(
       'clientOptions' => array(
@@ -8,19 +8,19 @@
       'htmlOptions' => array(
           'class' => 'assign-role',
       )
-  )); 
-  $userEmailAttribute = array(     
-      'placeholder' => 'user email',
+  ));
+  $userEmailAttribute = array(
+      'placeholder' => Yii::t('rbac', 'User email'),
       'class' => 'custom-textbox'
     );
   if ($model->check_user_status == 'EDIT') {
     $userEmailAttribute['readonly'] = 'readonly';
-  } 
+  }
   $errorAttribute = "style='display: none' ";
   if ($message != '') {
     $errorAttribute = "";
   }
-  ?>  
+  ?>
 <div id="assign-role-error" class="alert-danger col-md-11" <?php echo $errorAttribute; ?> > <?php echo $message; ?> </div>
   <div class="control-group">
     <?php echo $form->labelEx($model, 'user_email', array('class' => 'control-label')); ?>
@@ -34,8 +34,8 @@
     </div>
   </div>
   <div class="control-group">
-    <?php echo $form->labelEx($model, 'Assign Role', array('class' => 'control-label')); ?>
-    <div class="controls">   
+    <?php echo $form->labelEx($model, Yii::t('rbac', 'Assign Role'), array('class' => 'control-label')); ?>
+    <div class="controls">
       <ul class="rbac-chechbox">
         <?php
         foreach ($roles as $role) {
@@ -47,7 +47,7 @@
               $checkBoxValue['checked'] = 'checked';
             }
           }
-          ?> 
+          ?>
         <li>
           <?php echo $form->checkBox($model, 'role_id[]', $checkBoxValue); ?>  &nbsp;
           <?php echo $role['role']; } ?>
@@ -62,11 +62,11 @@
         echo $form->hiddenField($model, 'role_id');
       }
       ?>
-      <?php echo CHtml::submitButton('Assign', array('id' => 'assign-roles', 'class' => 'btn submit-btn large')); ?>
+      <?php echo CHtml::submitButton(Yii::t('rbac', 'Assign'), array('id' => 'assign-roles', 'class' => 'btn submit-btn large')); ?>
     </div>
   </div>
   <?php $this->endWidget(); ?>
 </div>
 <script>
-  var checkUserStatus = "<?php echo $model->check_user_status; ?>";    
+  var checkUserStatus = "<?php echo $model->check_user_status; ?>";
 </script>
