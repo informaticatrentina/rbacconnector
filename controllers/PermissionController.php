@@ -29,6 +29,7 @@ class PermissionController extends PageController {
    * function id used for change, assign permission to a role
    */
   public function actionAssign() {
+    
     $haveAdminPrivilege = false;
     if (isset(Yii::app()->session['user'])) {
       $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
@@ -38,6 +39,7 @@ class PermissionController extends PageController {
     }
     $model = new Permission();
     if (isset($_POST['Permission'])) {
+      
       $post = $_POST['Permission'];
       $model->role_id = $post['role_id'];
       $model->delete();
@@ -73,6 +75,11 @@ class PermissionController extends PageController {
     $role->id = $_GET['id'];
     $roles = $role->get();
     $model->role = $roles['role'];
+    Yii::app()->clientScript->registerScriptFile(
+      Yii::app()->getAssetManager()->publish(
+        Yii::getPathOfAlias('rbacconnector.assets.js') . '/role.js'
+      ), CClientScript::POS_END
+    );
     $this->render('permission', array('model' => $model, 'roles' => $roles,
         'permissions' => $permissions, 'selectedPermission' => $selPermission));
   }

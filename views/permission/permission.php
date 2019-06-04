@@ -8,6 +8,7 @@
       ),
       'htmlOptions' => array(
           'class' => 'permission-add assign-role',
+          'id' => 'permission_form_assign'
       )
   ));
   ?>
@@ -58,7 +59,7 @@
         $buttonText = Yii::t('rbac', 'Update');
       }
       ?>
-      <?php echo CHtml::submitButton($buttonText, array('class' => 'btn submit-btn large')); ?>
+      <?php echo CHtml::submitButton($buttonText, array('class' => 'btn submit-btn large', 'id' => 'permission_submit_button')); ?>
     </div>
   </div>
   <?php $this->endWidget(); ?>

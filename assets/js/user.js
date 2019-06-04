@@ -3,6 +3,13 @@ $(document).ready(function () {
     e.preventDefault();
     submitUserForm();
   });
+
+  /* Disabilitazione utente */
+  $('#rbac_user_table').on('click', '.disable_rbac_users', function (e) { e.preventDefault(); var r = confirm("Attenzione, l'utente verrà disabilitato e il consenso alla privacy (GDPR) verrà impostato su NO. Continuare?"); if (r == true) { $.ajax({ url: $(this).attr('href'), type: "GET", dataType: "json", success: function(data) { if(data && data.response) { if(data.response=='success')  {{ window.location.reload(false); } } }  } }); } else return false; });
+});
+
+$('input[type="checkbox"]').on('change', function() {
+  $('input[type="checkbox"]').not(this).prop('checked', false);
 });
 
 function submitUserForm() {

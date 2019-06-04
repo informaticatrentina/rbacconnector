@@ -10,6 +10,7 @@
  * This file can not be copied and/or distributed without the express permission of
  *  <ahref Foundation.
  */
+
 class User extends CFormModel {
 
   public $id;
@@ -53,6 +54,79 @@ class User extends CFormModel {
       Yii::log('RBAC', 'error', $e->getMessage());
     }
     return $assignRole;
+  }
+
+  /**
+   * get
+   * function is used for g tting role
+   */
+  public function getAllUsers() 
+  {
+    try
+    {
+      $identity_mgr = new UserIdentityManager();
+      $users=$identity_mgr->getAllUsers();
+      //die(print('<pre>'.print_r($users,TRUE).'</pre>'));
+      if (isset($users['success']) && $users['success'] == TRUE && !empty($users['data'])) 
+      {
+        return $users['data'];
+      }
+      
+    }
+    catch(Exception $e)
+    {
+      return FALSE;
+    }
+  }
+
+  public function getbyId($userId) 
+  {
+    try
+    {
+      $identity_mgr = new UserIdentityManager();
+      $user=$identity_mgr->getUserbyId($userId);
+      //die(print('<pre>'.print_r($user,TRUE).'</pre>'));
+      if (isset($user['success']) && $user['success'] == TRUE && isset($user['data'][0]) && !empty($user['data'][0])) 
+      {
+        return $user['data'][0];
+      }      
+    }
+    catch(Exception $e)
+    {
+      return FALSE;
+    }
+
+
+    $connection = Yii::app()->db;
+    $where = array(1);
+    $data = array();
+    if (!empty($this->id)) {
+      $where[] = 'u.id = :id';
+      $data[':id'] = $this->id;
+    }
+    if (!empty($this->role_id)) {
+      $where[] = 'ur.role_id = :role_id';
+      $data[':role_id'] = $this->role_id;
+    }
+    if (!empty($this->user_id)) {
+      $where[] = 'ur.user_id = :user_id';
+      $data[':user_id'] = $this->user_id;
+    }
+    if (!empty($this->user_email)) {
+      $where[] = 'u.email = :user_email';
+      $data[':user_email'] = $this->user_email;
+    }
+    if (isset($this->role_status)) {
+      $where[] = 'rl.status = :role_status';
+      $data[':role_status'] = $this->role_status;
+    }
+    $sql = "SELECT * FROM rbac_user u INNER JOIN rbac_user_role ur ON u.id  = ur.user_id 
+      INNER JOIN rbac_role rl ON ur.role_id = rl.id WHERE " . implode(' AND ', $where);
+    $query = $connection->createCommand($sql);
+    foreach ($data as $key => &$val) {
+      $query->bindParam($key, $val);
+    }
+    return $query->queryAll();
   }
   
   /**
@@ -226,6 +300,10 @@ class User extends CFormModel {
    * @return boolean true if user have permission else false
    */
   public static function checkPermission($email, $permission) { 
+
+    // Utile nel caso in cui l'admin per sbaglio non imposti un permesso diverso da admin
+    if($email==RBAC_ADMIN_USER) return TRUE;
+    
     $havePermission = false;
     if (empty($email)) {
       return $havePermission; 

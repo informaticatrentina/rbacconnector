@@ -24,7 +24,7 @@
 <div id="assign-role-error" class="alert-danger col-md-11" <?php echo $errorAttribute; ?> > <?php echo $message; ?> </div>
   <div class="control-group">
     <?php echo $form->labelEx($model, 'user_email', array('class' => 'control-label')); ?>
-    <div class="controls">
+    <div class="controls"> 
       <?php echo $form->textField($model, 'user_email', $userEmailAttribute); ?>
       <?php echo $form->hiddenField($model, 'check_user_status') ?>
       <span class="help-inline">
@@ -39,14 +39,17 @@
       <ul class="rbac-chechbox">
         <?php
         foreach ($roles as $role) {
+     
           $checkBoxValue = array();
           $checkBoxValue['class'] = 'role-checkbox';
           $checkBoxValue['value'] = $role['id'];
-          if (!empty($selRoleIds)) {
-            if (in_array($role['id'], $selRoleIds)) {
+          if (!empty($selRoleId)) {   
+     
+            if ($role['id']==$selRoleId) {
+             
               $checkBoxValue['checked'] = 'checked';
             }
-          }
+          }    
           ?>
         <li>
           <?php echo $form->checkBox($model, 'role_id[]', $checkBoxValue); ?>  &nbsp;
