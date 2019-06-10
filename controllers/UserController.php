@@ -65,6 +65,45 @@ class UserController extends PageController {
       return $response;
     }
   }
+
+  public function actionEnable() 
+  {
+    $haveAdminPrivilege = false;
+    if (isset(Yii::app()->session['user'])) {
+      $haveAdminPrivilege = User::checkPermission(Yii::app()->session['user']['email'], 'is_admin');
+    } 
+    if (!$haveAdminPrivilege) {
+      $this->redirect(Yii::app()->homeUrl);
+    }
+
+    if (Yii::app()->request->isAjaxRequest && array_key_exists('id', $_GET) && !empty($_GET['id'])) 
+    {
+      $identity_mgr = new UserIdentityManager();
+      $responseidentity=$identity_mgr->enableUserbyId($_GET['id']);
+      if($responseidentity['success']) $status='success';
+      else $status='error';
+
+      $response = array('response' => $status, 'message' => $responseidentity['msg']);
+      echo CJSON::encode($response);
+      Yii::app()->end();
+    } 
+    else 
+    {
+      Yii::app()->redirect(BASE_URL);
+    }
+
+    if (array_key_exists('id', $_GET) && !empty($_GET['id'])) 
+    {   
+      //get user    
+      $identity_mgr = new UserIdentityManager();
+      $responseid=$identity_mgr->disableUserbyId($_GET['id']);
+
+      $response = Yii::app()->response;
+      $response->format = \yii\web\Response::FORMAT_JSON;
+      $response->data = array('response' => $responseid['success'], 'message' => $responseid['msg']);
+      return $response;
+    }
+  }
   /**
    * actionAssign
    * function id used fior change, assign permission to a role
@@ -242,6 +281,7 @@ class UserController extends PageController {
         'gdpr' => (isset($usr['gdpr']) && $usr['gdpr']==1)?('SI'):('NO'),
         'gdpr_date' => (isset($usr['gdpr_date']) && !empty($usr['gdpr_date']))?(date("d/m/Y - H:i", strtotime($usr['gdpr_date']))):('---'),
         'gdpr_date_deleted' => (isset($usr['gdpr_date_del']) && !empty($usr['gdpr_date_del']))?(date("d/m/Y - H:i", strtotime($usr['gdpr_date_del']))):('---'),
+        'status' => $usr['status']
         );
         $i++;
       }

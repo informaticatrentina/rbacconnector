@@ -84,5 +84,68 @@ class UserIdentityManager extends CFormModel{
       return array('success' => FALSE, 'msg' => $e->getMessage());      
     }
   }
+
+  public function enableUserbyId($user_id)
+  {
+    try 
+    {
+      $attiva_utente=false;
+      // Recupero email
+      $user = new UserIdentityAPI();
+      $dataresponse=$user->get('users',array('source' => SOURCE, '_id' => $user_id), '');  
+
+      // Scrivo il file di log se la risposta è positiva
+      if(isset($dataresponse['success']) && $dataresponse['success']==true)
+      {
+        $email=$dataresponse['data']['_items'][0]['email'];
+        $dataresponseemail=$user->get('users',array('source' => SOURCE, 'email' => $email, 'stato' => 1), '');
+        if(isset($dataresponseemail['success']) && $dataresponseemail['success']==true)
+        {
+          if(is_array($dataresponseemail['data']['_items']) && count($dataresponseemail['data']['_items'])>1)
+          {
+            $check_enable_status=false;
+            foreach($dataresponseemail['data']['_items'] as $single_user)
+            {
+              if($single_user['status']==1) $check_enable_status=1;              
+            }
+            if(!$check_enable_status) $attiva_utente=true;
+          }
+          else $attiva_utente=true;
+        }
+      }
+
+      if($attiva_utente)
+      {
+        $inputParam = array(
+          'status' => 1,
+          'id' => $user_id
+        );
+  
+        $response=$user->curlPut('users',$inputParam);
+
+        // Scrivo il file di log se la risposta è positiva
+      
+        if(isset($response['success']) && $response['success']==true)
+        {
+          if (is_dir(RUNTIME_DIRECTORY)) 
+          {
+            if(is_writable(RUNTIME_DIRECTORY))
+            {
+              $filename = RUNTIME_DIRECTORY.'/gdpr_data_response.txt';
+              $now= new DateTime();
+              $now->setTimezone(new DateTimeZone('Europe/Rome'));
+              file_put_contents($filename, $now->format('Y-m-d H:i:s').' ### '.json_encode($inputParam). PHP_EOL, FILE_APPEND);
+            }
+          }
+        }
+        return $response;
+      }
+      else return  array('success' => FALSE, 'msg' => 'non attivabile'); 
+    }
+    catch(Exception $e)
+    {
+      return array('success' => FALSE, 'msg' => $e->getMessage());      
+    }
+  }
 }
 ?>
