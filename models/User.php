@@ -58,7 +58,7 @@ class User extends CFormModel {
 
   /**
    * get
-   * function is used for g tting role
+   * function is used for get list of users
    */
   public function getAllUsers() 
   {

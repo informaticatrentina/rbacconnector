@@ -91,18 +91,6 @@ class UserController extends PageController {
     {
       Yii::app()->redirect(BASE_URL);
     }
-
-    if (array_key_exists('id', $_GET) && !empty($_GET['id'])) 
-    {   
-      //get user    
-      $identity_mgr = new UserIdentityManager();
-      $responseid=$identity_mgr->disableUserbyId($_GET['id']);
-
-      $response = Yii::app()->response;
-      $response->format = \yii\web\Response::FORMAT_JSON;
-      $response->data = array('response' => $responseid['success'], 'message' => $responseid['msg']);
-      return $response;
-    }
   }
   /**
    * actionAssign
@@ -366,6 +354,8 @@ class UserController extends PageController {
 
       $header = array(
         'id' => Yii::t('rbac', 'S.No.'),
+        'firstname' => Yii::t('rbac', 'First Name'),
+        'lastname' => Yii::t('rbac', 'Last Name'),
         'email' => Yii::t('rbac', 'User email'),
         'role' => Yii::t('rbac', 'Role'),
         'gdpr' => Yii::t('rbac', 'Gdpr Policy'),
@@ -382,6 +372,8 @@ class UserController extends PageController {
       {
         $tmp_data=array(
         'id' => $i,
+        'firstname' => $usr['firstname'],
+        'lastname' => $usr['lastname'],
         'email' => $usr['email'],
         'role' => (array_key_exists(trim($usr['email']), $data_web))?($data_web[$usr['email']]):('N.D'),
         'gdpr' => (isset($usr['gdpr']) && $usr['gdpr']==1)?('SI'):('NO'),
