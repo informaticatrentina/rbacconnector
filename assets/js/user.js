@@ -6,6 +6,9 @@ $(document).ready(function () {
 
   /* Disabilitazione utente */
   $('#rbac_user_table').on('click', '.disable_rbac_users', function (e) { e.preventDefault(); var r = confirm("Attenzione, l'utente verrà disabilitato e il consenso alla privacy (GDPR) verrà impostato su NO. Continuare?"); if (r == true) { $.ajax({ url: $(this).attr('href'), type: "GET", dataType: "json", success: function(data) { if(data && data.response) { if(data.response=='success')  {{ window.location.reload(false); } } }  } }); } else return false; });
+
+  /* Abilitazione Utente */
+  $('#rbac_user_table').on('click', '.enable_rbac_users', function (e) { e.preventDefault(); var r = confirm("Attenzione, l'utente verrà abilitato. Nel caso in cui l'utente si sia di nuovo registrato, tale modifica non avrà effetto."); if (r == true) { $.ajax({ url: $(this).attr('href'), type: "GET", dataType: "json", success: function(data) { if(data && data.response) { if(data.response=='success')  {{ window.location.reload(false); } } }  } }); } else return false; });
 });
 
 $('input[type="checkbox"]').on('change', function() {
