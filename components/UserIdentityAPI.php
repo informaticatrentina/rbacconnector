@@ -29,7 +29,7 @@ class UserIdentityAPI {
    * @param (string) $function
    * @return (array) $userDetail
    */
-  /*
+  
   function getUserDetail($function, $params = array(), $email = false, $id = false, $nickname = false) {
     $userDetail = array();
     try {
@@ -112,7 +112,7 @@ class UserIdentityAPI {
     LAST:
     return $userDetail;
   }
-  */
+  
   /**
    * get
    * function is used for send curl get request for getting user data
