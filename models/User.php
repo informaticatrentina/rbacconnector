@@ -9,6 +9,7 @@
  * This file is part of <RBAC>.
  * This file can not be copied and/or distributed without the express permission of
  *  <ahref Foundation.
+ * Edit: I ruoli assegnati a ogni singolo utente sono stati spostati sul database mongodb
  */
 
 class User extends CFormModel {
