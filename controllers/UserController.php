@@ -92,6 +92,7 @@ class UserController extends PageController {
       Yii::app()->redirect(BASE_URL);
     }
   }
+  
   /**
    * actionAssign
    * function id used fior change, assign permission to a role
@@ -116,94 +117,60 @@ class UserController extends PageController {
       $role = new Role();
       $role->status = ACTIVE;
       $roles = $role->get();
-      if (isset($_POST['User'])) {
-        $post = $_POST['User'];
-        $model->attributes = $post;
-        $model->check_user_status = $post['check_user_status'];
-        $model->user_email = trim($post['user_email']);
-        if ($model->validate()) {      
-          $userDetail = $model->getUserByEmail();
-          if (empty($userDetail) && $model->check_user_status == 'CREATE') {   
-            $model->user_status = ACTIVE;
-            $model->user_id = $model->saveUser();
-          } else if (!empty($userDetail) && $model->check_user_status == 'CREATE') {
-            if ($userDetail['status'] == ACTIVE) {
-              throw new Exception('User already exists.');
-            }
-            $model->user_status = ACTIVE;
-            $model->user_id = $userDetail['id'];
-            $model->updateUser();
-          } else if ($model->check_user_status == 'EDIT') {
-            $model->user_status = ACTIVE;
-            $model->user_id = $userDetail['id'];
-            $model->updateUser();
-          } else {
-            $model->user_id = $userDetail['id'];
-          }
-          $model->delete();
-    
-          if (isset($post['role_id']) && !empty($post['role_id'])) {
-         
-            $isRoleAssigned = false;
 
-            if(is_array($post['role_id']))
-            {
-              foreach ($post['role_id'] as $role) {       
-                if (!empty($role)) {
-                  $isRoleAssigned = true;
-                  $model->role_id = $role;
-                  $model->save();
-                }
-              }
-            }   
-            
-            if ($isRoleAssigned === false) {
-              $model->user_status = INACTIVE;
-              $model->updateUser();
-            }
+      if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+      {                 
+        if(!isset($_POST['User']['user_email']) || empty($_POST['User']['user_email'])) throw new Exception('Attenzione, campo email obbligatorio.');
+        else
+        {          
+          $email=trim($_POST['User']['user_email']);
+          $model->user_email = $email;
+        } 
 
-            $this->redirect('/rbacconnector/user/index');
-          }          
+        if(!isset($_POST['role_name']) || empty($_POST['role_name'])) throw new Exception('Attenzione, non è stato selezionato nessun ruolo.');
+        else
+        {
+          $role_name=trim($_POST['role_name']);
+          $model->role_name = $role_name;
+        } 
+
+        // Recupero info utente by email - In particolare esso deve essere
+
+        $datauser=$model->getUserByEmail($email);
+        //die(print('<pre>'.print_r($datauser,TRUE).'</pre>'));
+        
+        if(empty($datauser)) throw new Exception('Attenzione, non è presente nessun utente attivo con mail: '.$email);
+        else
+        {
+          if(!isset($datauser['_id']['$id'])) throw new Exception('Attenzione, non è presente nessun utente attivo con mail: '.$email);
+          else
+          {
+            $user_id=$datauser['_id']['$id'];
+            $model->user_id=$user_id;
+          } 
+          
+          // Aggiorno il ruolo dell'utente
+
+          $model->setRuolobyId($role_name,$user_id);
+          $this->redirect('/rbacconnector/user/index');         
         }
       }      
-      $model->check_user_status = 'CREATE';
-    
-      if (array_key_exists('id', $_GET) && !empty($_GET['id'])) {   
-        //get user    
-      
-        $userDetail = $model->getbyId($_GET['id']);        
-        if (!empty($userDetail)) {        
-          $model->user_email = $userDetail['email'];
-          $model->user_status = $userDetail['status'];
-          $userWebDetail = $model->getUserByEmail();
-   
-          if(!empty($userWebDetail))
-          {
-            $model->check_user_status = 'EDIT';
-            $model->id = $userWebDetail['id'];
-   
-            $userWebdata=$model->get();
-            if(isset($userWebdata[0]) && !empty($userWebdata[0]))
-            {
-              $datauser=$userWebdata[0];
-              $model->id =  $datauser['id'];
-              $model->user_status = $datauser['status'];
-              $model->user_id = $datauser['user_id'];
-             // $model->role_status = $datauser['role'];
-              //$model->role_id = $datauser['role_id'];
-            }
-          } 
-        }
      
-          if(isset($model->user_id) && !empty($model->user_id)) $user['user_id'] = $model->user_id;
-          $user['email'] = $userDetail['email'];
+      if (array_key_exists('id', $_GET) && !empty($_GET['id'])) 
+      {
+        $userDetail = $model->getbyId($_GET['id']);    
 
+        if (!empty($userDetail)) 
+        {        
           $model->user_email = $userDetail['email'];
-     
-          if(isset($datauser['role_id']) && !empty($datauser['role_id']))
-          {
-            $selRoleId = $datauser['role_id']; 
-          } 
+
+          if(isset($userDetail['site-user-info']['role'][0])) $selRoleName=$userDetail['site-user-info']['role'][0];
+          else $selRoleName=null;        
+        }
+        else
+        {
+          $this->redirect('/rbacconnector/user/index');
+        }  
       }
     } catch (Exception $e) {
       $message = $e->getMessage();
@@ -214,8 +181,9 @@ class UserController extends PageController {
         Yii::getPathOfAlias('rbacconnector.assets.js') . '/role.js'
       ), CClientScript::POS_END
     );
+
     $this->render('user', array('model' => $model, 'user' => $user,
-      'roles' => $roles, 'selRoleId' => $selRoleId, 'message' => $message));
+      'roles' => $roles, 'selRoleName' => $selRoleName, 'message' => $message));
   }
 
   /**
@@ -237,22 +205,6 @@ class UserController extends PageController {
     // Recupero gli utenti da Mongodb
     $users = $model->getAllUsers();
 
-    // Recupero gli utenti da Mysql
-    $usersweb = $model->get();
-
-    $data_web=array();
-    // Normalizzo gli utenti ricavati per recuperare i ruoli locali
-    if(!empty($usersweb))
-    {
-      foreach($usersweb as $webusr)
-      {       
-        if(isset($webusr['email']) && !empty($webusr['email']) && isset($webusr['role']) && !empty($webusr['role']))
-        {
-          $data_web[$webusr['email']]=$webusr['role'];
-        }        
-      }
-    }
-
     $data = array();
 
     if(!empty($users))
@@ -265,7 +217,7 @@ class UserController extends PageController {
         $datatmp[]=array('id' => $i,
         'user_id'=> $usr['_id'],
         'email' => $usr['email'],
-        'role' => (array_key_exists(trim($usr['email']), $data_web))?($data_web[$usr['email']]):('N.D'),
+        'role' => (isset($usr['site-user-info']['role'][0]))?($usr['site-user-info']['role'][0]):('N.D'),
         'gdpr' => (isset($usr['gdpr']) && $usr['gdpr']==1)?('SI'):('NO'),
         'gdpr_date' => (isset($usr['gdpr_date']) && !empty($usr['gdpr_date']))?(date("d/m/Y - H:i", strtotime($usr['gdpr_date']))):('---'),
         'gdpr_date_deleted' => (isset($usr['gdpr_date_del']) && !empty($usr['gdpr_date_del']))?(date("d/m/Y - H:i", strtotime($usr['gdpr_date_del']))):('---'),

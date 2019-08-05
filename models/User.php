@@ -16,9 +16,10 @@ class User extends CFormModel {
   public $id;
   public $user_id;
   public $role_id;
+  public $role_name;
   public $user_email;
   public $user_status;
-  public $role_status;
+  public $role_status;    
   public $check_user_status;
 
   public function rules() {
@@ -41,6 +42,7 @@ class User extends CFormModel {
    * save
    * function is used for save role
    */
+  /*
   public function save() {
     try {
       $connection = Yii::app()->db;
@@ -55,6 +57,7 @@ class User extends CFormModel {
     }
     return $assignRole;
   }
+  */
 
   /**
    * get
@@ -84,7 +87,7 @@ class User extends CFormModel {
     try
     {
       $identity_mgr = new UserIdentityManager();
-      $user=$identity_mgr->getUserbyId($userId);
+      $user=$identity_mgr->getUserbyId($userId);      
       //die(print('<pre>'.print_r($user,TRUE).'</pre>'));
       if (isset($user['success']) && $user['success'] == TRUE && isset($user['data'][0]) && !empty($user['data'][0])) 
       {
@@ -96,7 +99,7 @@ class User extends CFormModel {
       return FALSE;
     }
 
-
+/*
     $connection = Yii::app()->db;
     $where = array(1);
     $data = array();
@@ -127,12 +130,14 @@ class User extends CFormModel {
       $query->bindParam($key, $val);
     }
     return $query->queryAll();
+    */
   }
   
   /**
    * get
    * function is used for g tting role
    */
+  /*
   public function get() {
     $connection = Yii::app()->db;
     $where = array(1);
@@ -165,11 +170,14 @@ class User extends CFormModel {
     }
     return $query->queryAll();
   }
+  */
+
   
   /**
    * delete
    * function is used for delete role
    */
+  /*
   public function delete() {
     try {
       $deleteRole = 0;      
@@ -196,11 +204,12 @@ class User extends CFormModel {
     }
     return $deleteRole;
   }
-  
+  */
   /**
    * saveUser
    * function is used for save user
    */
+  /*
   public function saveUser() {
     $connection = Yii::app()->db;
     if (empty($this->user_email)) {
@@ -213,20 +222,41 @@ class User extends CFormModel {
     $query->execute();
     return Yii::app()->db->getLastInsertId();
   }
-  
+  */
+
   /**
    * getUserByEmail
    * function is used for getting user detail by email
    */
-  public function getUserByEmail() {
-    $connection = Yii::app()->db;
-    if (empty($this->user_email)) {
-      return array();
+
+  public function getUserByEmail($email) 
+  {
+    try
+    {
+      $identity_mgr = new UserIdentityManager();
+      $user=$identity_mgr->getActiveUserbyEmail($email);
+      if (isset($user['success']) && $user['success'] == TRUE && isset($user['data'][0]) && !empty($user['data'][0])) 
+      {
+        return $user['data'][0];
+      }      
     }
-    $sql = "SELECT * FROM rbac_user WHERE email = :email ";
-    $query = $connection->createCommand($sql);
-    $query->bindParam(":email", $this->user_email);    
-    return $query->queryRow();
+    catch(Exception $e)
+    {
+      return FALSE;
+    }
+  }
+
+  public function setRuolobyId($ruolo,$id)
+  {
+    try
+    {
+      $identity_mgr = new UserIdentityManager();
+      $user=$identity_mgr->setRuoloById($ruolo,$id);   
+    }
+    catch(Exception $e)
+    {
+      return FALSE;
+    }
   }
  
  /**
@@ -235,6 +265,7 @@ class User extends CFormModel {
   * @param string $email
   * @return array $role
   */
+  /*
  public static function getRoles($email) {
     $role = array();
     $connection = Yii::app()->db;
@@ -251,7 +282,7 @@ class User extends CFormModel {
     }
     return $role;
   }
-  
+  */
  /**
   * getPermission
   * function is used for getting permissions 
@@ -259,6 +290,7 @@ class User extends CFormModel {
   * @param boolean $roleWisePermission (optional) - true if role wise permission is required
   * @return array $permission
   */
+  /*
  public static function getPermission($email, $roleWisePermission = false) {
     $permission = array();
     $status = ACTIVE;
@@ -291,7 +323,7 @@ class User extends CFormModel {
     }
     return $permission;
   }
-  
+  */
   /**
    * checkPermission
    * function is used for check permission 
@@ -327,6 +359,7 @@ class User extends CFormModel {
    * This function is used to update User details.
    * @return int
    */
+  /*
   public function updateUser() {
     try {
       $set = array();
@@ -353,5 +386,5 @@ class User extends CFormModel {
         Yii::log('Error caused in updateUser method', 'error', $e->getMessage());
     }
   }
-    
+    */
 }

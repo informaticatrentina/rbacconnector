@@ -34,28 +34,17 @@
     </div>
   </div>
   <div class="control-group">
-    <?php echo $form->labelEx($model, Yii::t('rbac', 'Assign Role'), array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model, Yii::t('rbac', 'Assign Role'), array('class' => 'control-label')); ?>    
     <div class="controls">
-      <ul class="rbac-chechbox">
-        <?php
+      <select id="user-role" class="form-control editUserRole" name="role_name">
+      <option value="">Seleziona..</option>
+      <?php
         foreach ($roles as $role) {
-     
-          $checkBoxValue = array();
-          $checkBoxValue['class'] = 'role-checkbox';
-          $checkBoxValue['value'] = $role['id'];
-          if (!empty($selRoleId)) {   
-     
-            if ($role['id']==$selRoleId) {
-             
-              $checkBoxValue['checked'] = 'checked';
-            }
-          }    
-          ?>
-        <li>
-          <?php echo $form->checkBox($model, 'role_id[]', $checkBoxValue); ?>  &nbsp;
-          <?php echo $role['role']; } ?>
-        </li>
-      </ul>
+      ?>
+        <option <?=(isset($role['role']) && isset($selRoleName) && $role['role']==$selRoleName)?('selected="selected"'):(''); ?> value="<?php echo $role['role'] ?>"><?php echo $role['role']; ?></option>        
+        <?php }
+        ?>
+      </select>
     </div>
   </div>
   <div class="control-group">

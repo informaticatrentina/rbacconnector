@@ -45,6 +45,21 @@ class UserIdentityManager extends CFormModel{
     }
   }
 
+  public function getActiveUserbyEmail($email)
+  {
+    try 
+    {
+      $users = new UserIdentityAPI();
+      $response=$users->get('users',array('source' => SOURCE, 'email' => $email, 'status' => 1), '');  
+       if($response['success']==TRUE) return array('success' => TRUE, 'data' => $response['data']['_items']);    
+      else return array('success' => FALSE, 'msg' => $response['msg']);
+    }
+    catch(Exception $e)
+    {
+      return array('success' => FALSE, 'msg' => $e->getMessage());      
+    }
+  }
+
   public function disableUserbyId($user_id)
   {
     try 
@@ -146,6 +161,27 @@ class UserIdentityManager extends CFormModel{
         return $response;
       }
       else return  array('success' => FALSE, 'msg' => 'non attivabile'); 
+    }
+    catch(Exception $e)
+    {
+      return array('success' => FALSE, 'msg' => $e->getMessage());      
+    }
+  }
+
+  public function setRuoloById($ruolo,$user_id)
+  {
+    try 
+    {  
+      $user = new UserIdentityAPI();
+
+      $inputParam = array(
+          'site-user-info' => array('role' => array($ruolo)),
+          'id' => $user_id
+      );
+
+      $response=$user->curlPut('users',$inputParam);   
+      if(isset($response['_status']) &&  $response['_status']=='OK') return TRUE;
+      else return FALSE;
     }
     catch(Exception $e)
     {
