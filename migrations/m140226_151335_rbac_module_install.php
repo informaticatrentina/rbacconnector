@@ -14,7 +14,7 @@ class m140226_151335_rbac_module_install extends CDbMigration {
                           `status` tinyint(2) NOT NULL,
                           PRIMARY KEY (`id`)
                      )');
-    
+    /*
     $this->execute('CREATE TABLE IF NOT EXISTS `rbac_user` (
                           `id` int(10) NOT NULL AUTO_INCREMENT,
                           `email` varchar(100) NOT NULL,
@@ -25,7 +25,7 @@ class m140226_151335_rbac_module_install extends CDbMigration {
     $this->execute('CREATE TABLE IF NOT EXISTS `rbac_user_role` (
                           `user_id` int(10) NOT NULL,
                           `role_id` int(11) NOT NULL
-                     )');
+                     )');*/
   }
 
   public function down() {

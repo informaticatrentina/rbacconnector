@@ -280,25 +280,11 @@ class UserController extends PageController {
     }
 
     $model = new User();
-
+    
     // Recupero gli utenti da Mongodb
     $users = $model->getAllUsers();
 
-    // Recupero gli utenti da Mysql
-    $usersweb = $model->get();
-
-    $data_web=array();
-    // Normalizzo gli utenti ricavati per recuperare i ruoli locali
-    if(!empty($usersweb))
-    {
-      foreach($usersweb as $webusr)
-      {       
-        if(isset($webusr['email']) && !empty($webusr['email']) && isset($webusr['role']) && !empty($webusr['role']))
-        {
-          $data_web[$webusr['email']]=$webusr['role'];
-        }        
-      }
-    }
+    $data = array();
 
     if(!empty($users))
     {
@@ -327,7 +313,7 @@ class UserController extends PageController {
         'firstname' => $usr['firstname'],
         'lastname' => $usr['lastname'],
         'email' => $usr['email'],
-        'role' => (array_key_exists(trim($usr['email']), $data_web))?($data_web[$usr['email']]):('N.D'),
+        'role' => (isset($usr['site-user-info']['role'][0]))?($usr['site-user-info']['role'][0]):('N.D'),
         'gdpr' => (isset($usr['gdpr']) && $usr['gdpr']==1)?('SI'):('NO'),
         'gdpr_date' => (isset($usr['gdpr_date']) && !empty($usr['gdpr_date']))?(date("d/m/Y - H:i", strtotime($usr['gdpr_date']))):('---'),
         'gdpr_date_deleted' => (isset($usr['gdpr_date_del']) && !empty($usr['gdpr_date_del']))?(date("d/m/Y - H:i", strtotime($usr['gdpr_date_del']))):('---'),
