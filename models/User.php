@@ -70,7 +70,7 @@ class User extends CFormModel {
     {
       $identity_mgr = new UserIdentityManager();
       $users=$identity_mgr->getAllUsers();
-      //die(print('<pre>'.print_r($users,TRUE).'</pre>'));
+
       if (isset($users['success']) && $users['success'] == TRUE && !empty($users['data'])) 
       {
         return $users['data'];
@@ -291,7 +291,7 @@ class User extends CFormModel {
   * @param boolean $roleWisePermission (optional) - true if role wise permission is required
   * @return array $permission
   */
-  /*
+  
  public static function getPermission($email, $roleWisePermission = false) {
     $permission = array();
     $status = ACTIVE;
@@ -299,32 +299,58 @@ class User extends CFormModel {
     if (empty($email)) {
       return $permission;
     }
+
+    $data=User::getUserByEmail($email);
+
     if ($roleWisePermission) {
-      $sql = "SELECT * FROM rbac_user u INNER JOIN rbac_user_role ur ON u.id  = ur.user_id 
-      INNER JOIN rbac_role rl ON rl.id = ur.role_id INNER JOIN rbac_permission p ON 
-      ur.role_id = p.role_id WHERE email = :email ";
-      $query = $connection->createCommand($sql);
-      $query->bindParam(":email", $email);
-      $permissions = $query->queryAll();
-      foreach ($permissions as $perm) {
-        $permission[$perm['role']][] = $perm['permission'];
+  
+      // Recupero i dati dell'utente   
+
+      if(isset($data['site-user-info']['role'][0]) && !empty($data['site-user-info']['role'][0]))
+      {
+        $ruolo=$data['site-user-info']['role'][0];
+  
+        $sql = "SELECT permission FROM rbac_permission u INNER JOIN rbac_role ur ON u.role_id  = ur.id 
+                WHERE ur.role = :role ";
+        $query = $connection->createCommand($sql);
+        $query->bindParam(":role", $ruolo);
+        $permissions = $query->queryAll();     
+        if(!empty($permissions))
+        {
+          foreach ($permissions as $perm) {
+            $permission[$ruolo][] = $perm['permission'];
+          }
+        }
+        return $permission;
       }
-      return $permission;
+      else return $permission;
     }
-    $sql = "SELECT * FROM rbac_user u INNER JOIN rbac_user_role ur ON u.id  = ur.user_id 
-      INNER JOIN rbac_permission p  ON ur.role_id = p.role_id 
-      INNER JOIN rbac_role rl  ON p.role_id = rl.id WHERE email = :email 
-      AND rl.status = :status";
-    $query = $connection->createCommand($sql);
-    $query->bindParam(":email", $email);
-    $query->bindParam(":status", $status);
-    $permissions = $query->queryAll();
-    foreach ($permissions as $perm) {
-      $permission[] = $perm['permission'];
+    
+    if(isset($data['site-user-info']['role'][0]) && !empty($data['site-user-info']['role'][0]) && isset($data['status']) && !empty($data['status']))
+    {     
+      $ruolo=$data['site-user-info']['role'][0];
+      $stato=$data['status'];
+
+      if($status==$stato)
+      {
+        $sql = "SELECT permission FROM rbac_permission u INNER JOIN rbac_role ur ON u.role_id  = ur.id 
+                WHERE ur.role = :role ";
+        $query = $connection->createCommand($sql);
+        $query->bindParam(":role", $ruolo);
+        $permissions = $query->queryAll();     
+        if(!empty($permissions))
+        {
+          foreach ($permissions as $perm) {
+            $permission[$ruolo][] = $perm['permission'];
+          }
+        }
+        return $permission;
+      }
+      else return $permission;   
     }
     return $permission;
   }
-  */
+  
   /**
    * checkPermission
    * function is used for check permission 
