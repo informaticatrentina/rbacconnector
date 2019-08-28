@@ -51,8 +51,8 @@ class UserIdentityManager extends CFormModel{
     {
       $users = new UserIdentityAPI();
       $response=$users->get('users',array('source' => SOURCE, 'email' => $email, 'status' => 1), '');  
-       if($response['success']==TRUE) return array('success' => TRUE, 'data' => $response['data']['_items']);    
-      else return array('success' => FALSE, 'msg' => $response['msg']);
+       if(isset($response['data']['_items']) && !empty($response['data']['_items'])) return array('success' => TRUE, 'data' => $response['data']['_items']);    
+      else return array('success' => FALSE, 'msg' => 'error get user by email');
     }
     catch(Exception $e)
     {
