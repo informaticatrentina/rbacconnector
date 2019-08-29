@@ -45,6 +45,21 @@ class UserIdentityManager extends CFormModel{
     }
   }
 
+  public function getActiveUserbyEmail($email)
+  {
+    try 
+    {
+      $users = new UserIdentityAPI();
+      $response=$users->get('users',array('source' => SOURCE, 'email' => $email, 'status' => 1), '');  
+       if(isset($response['data']['_items']) && !empty($response['data']['_items'])) return array('success' => TRUE, 'data' => $response['data']['_items']);    
+      else return array('success' => FALSE, 'msg' => 'error get user by email');
+    }
+    catch(Exception $e)
+    {
+      return array('success' => FALSE, 'msg' => $e->getMessage());      
+    }
+  }
+
   public function disableUserbyId($user_id)
   {
     try 
@@ -99,16 +114,20 @@ class UserIdentityManager extends CFormModel{
       {
         $email=$dataresponse['data']['_items'][0]['email'];
         $dataresponseemail=$user->get('users',array('source' => SOURCE, 'email' => $email, 'stato' => 1), '');
+        //die(print('<pre>'.print_r($dataresponseemail,TRUE).'</pre>'));
         if(isset($dataresponseemail['success']) && $dataresponseemail['success']==true)
         {
-          if(is_array($dataresponseemail['data']['_items']) && count($dataresponseemail['data']['_items'])>1)
+          //die(print('attiva utente: '.$attiva_utente));
+          if(is_array($dataresponseemail['data']['_items']) && !empty($dataresponseemail['data']['_items']))
           {
             $check_enable_status=false;
+            
             foreach($dataresponseemail['data']['_items'] as $single_user)
             {
-              if($single_user['status']==1) $check_enable_status=1;              
+              if($single_user['status']==1) $check_enable_status=true;              
             }
-            if(!$check_enable_status) $attiva_utente=true;
+            
+            if($check_enable_status==false) $attiva_utente=true;
           }
           else $attiva_utente=true;
         }
@@ -118,6 +137,7 @@ class UserIdentityManager extends CFormModel{
       {
         $inputParam = array(
           'status' => 1,
+          'gdpr' => 1,
           'id' => $user_id
         );
   
@@ -141,6 +161,27 @@ class UserIdentityManager extends CFormModel{
         return $response;
       }
       else return  array('success' => FALSE, 'msg' => 'non attivabile'); 
+    }
+    catch(Exception $e)
+    {
+      return array('success' => FALSE, 'msg' => $e->getMessage());      
+    }
+  }
+
+  public function setRuoloById($ruolo,$user_id)
+  {
+    try 
+    {  
+      $user = new UserIdentityAPI();
+
+      $inputParam = array(
+          'site-user-info' => array('role' => array($ruolo)),
+          'id' => $user_id
+      );
+
+      $response=$user->curlPut('users',$inputParam);   
+      if(isset($response['_status']) &&  $response['_status']=='OK') return TRUE;
+      else return FALSE;
     }
     catch(Exception $e)
     {
