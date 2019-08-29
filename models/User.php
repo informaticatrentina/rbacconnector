@@ -318,7 +318,7 @@ class User extends CFormModel {
         if(!empty($permissions))
         {
           foreach ($permissions as $perm) {
-            $permission[$ruolo][] = $perm['permission'];
+            $permission[] = $perm['permission'];
           }
         }
         return $permission;
@@ -341,7 +341,7 @@ class User extends CFormModel {
         if(!empty($permissions))
         {
           foreach ($permissions as $perm) {
-            $permission[$ruolo][] = $perm['permission'];
+            $permission[] = $perm['permission'];
           }
         }
         return $permission;
