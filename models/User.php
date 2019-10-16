@@ -89,7 +89,6 @@ class User extends CFormModel {
     {
       $identity_mgr = new UserIdentityManager();
       $user=$identity_mgr->getUserbyId($userId);      
-      //die(print('<pre>'.print_r($user,TRUE).'</pre>'));
       if (isset($user['success']) && $user['success'] == TRUE && isset($user['data'][0]) && !empty($user['data'][0])) 
       {
         return $user['data'][0];
@@ -99,39 +98,6 @@ class User extends CFormModel {
     {
       return FALSE;
     }
-
-/*
-    $connection = Yii::app()->db;
-    $where = array(1);
-    $data = array();
-    if (!empty($this->id)) {
-      $where[] = 'u.id = :id';
-      $data[':id'] = $this->id;
-    }
-    if (!empty($this->role_id)) {
-      $where[] = 'ur.role_id = :role_id';
-      $data[':role_id'] = $this->role_id;
-    }
-    if (!empty($this->user_id)) {
-      $where[] = 'ur.user_id = :user_id';
-      $data[':user_id'] = $this->user_id;
-    }
-    if (!empty($this->user_email)) {
-      $where[] = 'u.email = :user_email';
-      $data[':user_email'] = $this->user_email;
-    }
-    if (isset($this->role_status)) {
-      $where[] = 'rl.status = :role_status';
-      $data[':role_status'] = $this->role_status;
-    }
-    $sql = "SELECT * FROM rbac_user u INNER JOIN rbac_user_role ur ON u.id  = ur.user_id 
-      INNER JOIN rbac_role rl ON ur.role_id = rl.id WHERE " . implode(' AND ', $where);
-    $query = $connection->createCommand($sql);
-    foreach ($data as $key => &$val) {
-      $query->bindParam($key, $val);
-    }
-    return $query->queryAll();
-    */
   }
   
   /**
@@ -234,10 +200,11 @@ class User extends CFormModel {
   {
     try
     {
-      $identity_mgr = new UserIdentityManager();
+      $identity_mgr = new UserIdentityManager();     
       $user=$identity_mgr->getActiveUserbyEmail($email);
+
       if (isset($user['success']) && $user['success'] == TRUE && isset($user['data'][0]) && !empty($user['data'][0])) 
-      {
+      {      
         return $user['data'][0];
       }      
     }
@@ -305,10 +272,11 @@ class User extends CFormModel {
     if ($roleWisePermission) {
   
       // Recupero i dati dell'utente   
-
+     
       if(isset($data['site-user-info']['role'][0]) && !empty($data['site-user-info']['role'][0]))
       {
         $ruolo=$data['site-user-info']['role'][0];
+       
   
         $sql = "SELECT permission FROM rbac_permission u INNER JOIN rbac_role ur ON u.role_id  = ur.id 
                 WHERE ur.role = :role ";
@@ -368,11 +336,15 @@ class User extends CFormModel {
       return $havePermission; 
     }
     $allowedPermission = self::getPermission($email);
+    
+    // Se l'utente è un admin
+    if(is_array($allowedPermission) && isset($allowedPermission[0]) && ($allowedPermission[0]=='is_admin' || $allowedPermission[0]=='admin')) return TRUE;
+ 
     if (!is_array($permission)) {
         $permission = array($permission);
-    }
-    foreach($permission as $singlePermission) {
-        $singlePermission = strtolower(preg_replace("/[^a-z0-9]+/i", "_", $singlePermission));
+    }    
+    foreach($permission as $singlePermission) {        
+        $singlePermission = strtolower(preg_replace("/[^a-z0-9]+/i", "_", $singlePermission));        
         if (is_array($allowedPermission) && in_array($singlePermission, $allowedPermission)) {
             $havePermission = true;
             break;
